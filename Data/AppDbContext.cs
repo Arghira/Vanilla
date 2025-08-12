@@ -10,21 +10,28 @@ namespace Vanilla.Data
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
-            // 8 mese fixe
+            // ✅ deterministic seed for 8 mese
             mb.Entity<TableEntity>().HasData(
-                Enumerable.Range(1, 8)
-                    .Select(i => new TableEntity { Id = (short)i, Name = $"Masa {i}" })
+                new TableEntity { Id = 1, Name = "Masa 1" },
+                new TableEntity { Id = 2, Name = "Masa 2" },
+                new TableEntity { Id = 3, Name = "Masa 3" },
+                new TableEntity { Id = 4, Name = "Masa 4" },
+                new TableEntity { Id = 5, Name = "Masa 5" },
+                new TableEntity { Id = 6, Name = "Masa 6" },
+                new TableEntity { Id = 7, Name = "Masa 7" },
+                new TableEntity { Id = 8, Name = "Masa 8" }
             );
 
-            // index unic: o rezervare per masă pe același start_at
-            mb.Entity<Reservation>()
-              .HasIndex(r => new { r.TableId, r.StartAt })
-              .IsUnique();
-
-            // default pentru CreatedAt (merge pe SQLite & Postgres)
+            // ✅ let DB set CreatedAt (constant SQL, not DateTime.Now)
+#if POSTGRES
+    mb.Entity<Reservation>()
+      .Property(r => r.CreatedAt)
+      .HasDefaultValueSql("timezone('utc', now())"); // Postgres
+#else
             mb.Entity<Reservation>()
               .Property(r => r.CreatedAt)
-              .HasDefaultValueSql("CURRENT_TIMESTAMP");
+              .HasDefaultValueSql("CURRENT_TIMESTAMP");      // SQLite
+#endif
         }
     }
 }
