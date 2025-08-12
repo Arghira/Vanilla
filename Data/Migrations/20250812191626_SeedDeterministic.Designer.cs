@@ -11,8 +11,8 @@ using Vanilla.Data;
 namespace Vanilla.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250812190758_Sync_20250812220750")]
-    partial class Sync_20250812220750
+    [Migration("20250812191626_SeedDeterministic")]
+    partial class SeedDeterministic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,7 @@ namespace Vanilla.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TableId", "StartAt")
-                        .IsUnique();
+                    b.HasIndex("TableId");
 
                     b.ToTable("Reservations");
                 });

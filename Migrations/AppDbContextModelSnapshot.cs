@@ -52,8 +52,7 @@ namespace Vanilla.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TableId", "StartAt")
-                        .IsUnique();
+                    b.HasIndex("TableId");
 
                     b.ToTable("Reservations");
                 });
