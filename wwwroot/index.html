@@ -1,0 +1,660 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vanilla – Rezervări</title>
+    <style>
+        :root {
+            --bg: #0f1115; /* fundal aplicație */
+            --panel: #171a21; /* carduri/panouri */
+            --panel-2: #1d2230;
+            --text: #e6eaf2; /* text principal */
+            --muted: #9aa4b2; /* text secundar */
+            --accent: #8ef0cf; /* liber */
+            --accent-2: #50c8ff; /* accent secundar */
+            --danger: #ff6b6b; /* rezervat */
+            --warning: #ffd166; /* atenționări */
+            --shadow: 0 10px 30px rgba(0,0,0,.35);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
+            color: var(--text);
+            font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(6px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+            .brand .logo {
+                width: 36px;
+                height: 36px;
+                border-radius: 12px;
+                background: conic-gradient(from 180deg, #8ef0cf, #50c8ff, #ff6b6b, #8ef0cf);
+                box-shadow: 0 0 0 2px #12141a inset
+            }
+
+            .brand h1 {
+                margin: 0;
+                font-size: 18px;
+                letter-spacing: .3px
+            }
+
+        .layout {
+            max-width: 1100px;
+            margin: 22px auto;
+            padding: 0 16px;
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 320px 1fr
+        }
+
+        @media (max-width: 980px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 16px;
+            box-shadow: var(--shadow)
+        }
+
+            .card .card-h {
+                padding: 14px 16px;
+                border-bottom: 1px solid rgba(255,255,255,.06);
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .card .card-c {
+                padding: 16px
+            }
+
+        .controls .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px
+        }
+
+        .controls label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--muted)
+        }
+
+        .controls input, .controls select, .controls button {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+        .controls button {
+            cursor: pointer;
+            transition: transform .05s ease;
+            font-weight: 600
+        }
+
+        .controls .primary {
+            background: linear-gradient(180deg, #192233, #111726);
+            border-color: rgba(255,255,255,.08)
+        }
+
+            .controls .primary:hover {
+                transform: translateY(-1px)
+            }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--panel-2);
+            color: var(--muted);
+            border: 1px solid rgba(255,255,255,.06)
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+            .dot.free {
+                background: var(--accent)
+            }
+
+            .dot.busy {
+                background: var(--danger)
+            }
+
+        .stage {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            min-height: 420px;
+            background: #0e1117;
+            border: 1px solid rgba(255,255,255,.06)
+        }
+
+            .stage .backdrop {
+                width: 100%;
+                display: block;
+                opacity: .92;
+                user-select: none;
+                pointer-events: none
+            }
+
+        .tables {
+            position: absolute;
+            inset: 0
+        }
+
+        .marker {
+            --size: 38px;
+            position: absolute;
+            width: var(--size);
+            height: var(--size);
+            transform: translate(-50%, -50%);
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #0f131a;
+            cursor: pointer;
+            user-select: none;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,.5));
+            transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease;
+        }
+
+            .marker.free {
+                background: var(--accent)
+            }
+
+            .marker.busy {
+                background: var(--danger);
+                color: #0b0f14
+            }
+
+            .marker:hover {
+                transform: translate(-50%, -50%) scale(1.06)
+            }
+
+            .marker[data-edit="true"] {
+                outline: 2px dashed rgba(255,255,255,.3)
+            }
+
+        .toast {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.08);
+            padding: 12px 14px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: none
+        }
+
+        dialog {
+            border: none;
+            border-radius: 16px;
+            padding: 0;
+            background: var(--panel);
+            color: var(--text);
+            width: min(560px, 92vw)
+        }
+
+            dialog::backdrop {
+                background: rgba(0,0,0,.45)
+            }
+
+        .modal-h {
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .modal-c {
+            padding: 16px 18px
+        }
+
+        .modal-f {
+            padding: 16px 18px;
+            border-top: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end
+        }
+
+        .xbtn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 20px;
+            cursor: pointer
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        @media(max-width:560px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .modal-c label {
+            font-weight: 600;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px
+        }
+
+        .modal-c input, .modal-c textarea, .modal-c select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .ghost {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,.25)
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: 12px
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <h1>Vanilla · Rezervări</h1>
+        </div>
+        <div class="toolbar">
+            <button id="editToggle" class="ghost">Editare amplasare mese</button>
+            <button id="exportLayout" class="ghost">Export layout</button>
+        </div>
+    </header>
+
+    <main class="layout">
+        <section class="card controls" aria-label="Filtre și acțiuni">
+            <div class="card-h">
+                <strong>Selectează intervalul</strong>
+            </div>
+            <div class="card-c">
+                <div class="row">
+                    <div style="flex:1">
+                        <label for="date">Data</label>
+                        <input id="date" type="date" />
+                    </div>
+                    <div style="width:130px">
+                        <label for="time">Ora</label>
+                        <input id="time" type="time" step="3600" />
+                    </div>
+                    <div style="width:150px">
+                        <label for="duration">Durata</label>
+                        <select id="duration">
+                            <option value="60">60 min</option>
+                            <option value="90">90 min</option>
+                            <option value="120">120 min</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <button id="check" class="primary">Verifică disponibilitatea</button>
+                </div>
+                <div class="legend">
+                    <span class="pill"><span class="dot free"></span> Liber</span>
+                    <span class="pill"><span class="dot busy"></span> Rezervat</span>
+                    <span class="subtext">* Click pe o masă liberă pentru rezervare</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-h">
+                <strong>Hartă restaurant</strong>
+                <small class="subtext">Poți încărca propria imagine de plan în CSS/JS sau prin drag&drop peste hartă (demo).</small>
+            </div>
+            <div id="stage" class="card-c stage">
+                <!-- Imaginea planului (înlocuiește src cu harta ta). Pentru demo folosim un pattern simplu. -->
+                <img id="backdrop" class="backdrop" alt="Plan restaurant" />
+                <div class="tables" id="tables" aria-live="polite"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Modal Rezervare -->
+    <dialog id="modal">
+        <form method="dialog" id="reservationForm">
+            <div class="modal-h">
+                <strong>Rezervare masă <span id="mTable"></span></strong>
+                <button type="button" class="xbtn" id="closeModal" aria-label="Închide">×</button>
+            </div>
+            <div class="modal-c">
+                <div style="margin-bottom:10px" class="subtext">Interval: <span id="mWhen"></span></div>
+                <div class="grid">
+                    <div>
+                        <label for="mName">Nume</label>
+                        <input id="mName" required placeholder="Nume și prenume" />
+                    </div>
+                    <div>
+                        <label for="mPhone">Telefon</label>
+                        <input id="mPhone" placeholder="07xx xxx xxx" />
+                    </div>
+                    <div>
+                        <label for="mParty">Număr persoane</label>
+                        <input id="mParty" type="number" min="1" max="20" value="2" />
+                    </div>
+                    <div>
+                        <label for="mDuration">Durata</label>
+                        <select id="mDuration">
+                            <option value="60" selected>60 min</option>
+                            <option value="90">90 min</option>
+                            <option value="120">120 min</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1">
+                        <label for="mNote">Notă</label>
+                        <textarea id="mNote" rows="3" placeholder="Preferințe / ocazie specială"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-f">
+                <button type="button" class="ghost" id="cancelBtn">Anulează</button>
+                <button id="saveBtn" class="primary" value="default">Confirmă rezervarea</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+    // ===================== CONFIG =====================
+    // Setează URL-ul API-ului tău (ex.: Render). În dev local, modifică portul după caz.
+    const API_BASE = window.location.origin; // când UI-ul e servit din același proiect API
+
+    // Poziții implicite (procente) pentru 8 mese (ajustabile). left, top în % relativ la hartă.
+    // Le poți edita din "Editare amplasare mese" și exporta JSON pentru a le salva fix.
+    let layout = JSON.parse(localStorage.getItem('layout8') || 'null') || [
+      { id:1, left:38, top:22 },
+      { id:2, left:46, top:37 },
+      { id:3, left:60, top:26 },
+      { id:4, left:66, top:45 },
+      { id:5, left:75, top:45 },
+      { id:6, left:44, top:55 },
+      { id:7, left:64, top:60 },
+      { id:8, left:72, top:60 }
+    ];
+
+    const TABLES = layout.map(p => p.id);
+
+    // Imagine fallback (pattern) + suport drag&drop imagine peste hartă pentru previzualizare.
+    const backdrop = document.getElementById('backdrop');
+    const pattern = createPattern();
+    backdrop.src = pattern;
+
+    function createPattern(){
+      // generăm un mic pattern SVG data URL (dark) pentru demo
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>
+        <rect width='100%' height='100%' fill='#0e1219'/>
+        <g opacity='.08'>
+          <circle cx='20' cy='20' r='2' fill='white'/>
+          <circle cx='120' cy='60' r='2' fill='white'/>
+          <circle cx='80' cy='140' r='2' fill='white'/>
+          <rect x='0' y='100' width='200' height='2' fill='white'/>
+          <rect x='100' y='0' width='2' height='200' fill='white'/>
+        </g>
+      </svg>`;
+      return 'data:image/svg+xml;base64,' + btoa(svg);
+    }
+
+    // ===================== UI INITIAL =====================
+    const elDate = document.getElementById('date');
+    const elTime = document.getElementById('time');
+    const elDur = document.getElementById('duration');
+    const btnCheck = document.getElementById('check');
+    const tablesEl = document.getElementById('tables');
+    const toast = document.getElementById('toast');
+
+    // setăm data/ora implicit: următoarea oră întreagă
+    const now = new Date();
+    now.setMinutes(0,0,0);
+    now.setHours(now.getHours()+1);
+    elDate.value = toInputDate(now);
+    elTime.value = toInputTime(now);
+
+    btnCheck.addEventListener('click', refreshStatus);
+    elDate.addEventListener('change', refreshStatus);
+    elTime.addEventListener('change', refreshStatus);
+
+    // construim marker-ele o singură dată
+    function buildMarkers(){
+      tablesEl.innerHTML = '';
+      for(const pos of layout){
+        const m = document.createElement('button');
+        m.className = 'marker';
+        m.dataset.id = String(pos.id);
+        m.style.left = pos.left + '%';
+        m.style.top = pos.top + '%';
+        m.ariaLabel = `Masa ${pos.id}`;
+        m.textContent = String(pos.id);
+        m.addEventListener('click', () => onMarkerClick(pos.id));
+        tablesEl.appendChild(m);
+      }
+    }
+
+    buildMarkers();
+
+    // ===================== STATUS & REZERVARE =====================
+    async function refreshStatus(){
+      const { iso, human } = currentSlotIso();
+      showToast('Se încarcă disponibilitatea…');
+      try{
+        const r = await fetch(`${API_BASE}/status?startAt=${encodeURIComponent(iso)}`);
+        if(!r.ok) throw new Error('Eroare la citirea statusului.');
+        const data = await r.json(); // [{tableId,isReserved}]
+        const map = new Map(data.map(x => [x.tableId, x.isReserved]));
+        for(const el of tablesEl.querySelectorAll('.marker')){
+          const id = Number(el.dataset.id);
+          const busy = map.get(id) === true;
+          el.classList.toggle('busy', busy);
+          el.classList.toggle('free', !busy);
+          el.title = `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} — ${human}`;
+        }
+        showToast('Disponibilitatea a fost actualizată.');
+      }catch(err){
+        console.error(err);
+        showToast('Nu am putut încărca statusul (verifică API_BASE și CORS).');
+      }
+    }
+
+    function currentSlotIso(){
+      const d = elDate.value; const t = elTime.value || '20:00';
+      const local = new Date(`${d}T${t}:00`);
+      const iso = local.toISOString();
+      const human = local.toLocaleString(undefined, { dateStyle:'medium', timeStyle:'short' });
+      return { iso, human, local };
+    }
+
+    // MODAL REZERVARE
+    const modal = document.getElementById('modal');
+    const mTable = document.getElementById('mTable');
+    const mWhen = document.getElementById('mWhen');
+    const mName = document.getElementById('mName');
+    const mPhone = document.getElementById('mPhone');
+    const mParty = document.getElementById('mParty');
+    const mDuration = document.getElementById('mDuration');
+    const mNote = document.getElementById('mNote');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveBtn = document.getElementById('saveBtn');
+
+    function onMarkerClick(id){
+      const el = tablesEl.querySelector(`.marker[data-id="${id}"]`);
+      if(el.classList.contains('busy')){ return; }
+      const { iso, human } = currentSlotIso();
+      mTable.textContent = id;
+      mWhen.textContent = human;
+      mDuration.value = elDur.value;
+      mName.value = '';
+      mPhone.value = '';
+      mParty.value = '2';
+      mNote.value = '';
+      modal.showModal();
+
+      function cleanup(){
+        closeModal.removeEventListener('click', onClose);
+        cancelBtn.removeEventListener('click', onClose);
+        saveBtn.removeEventListener('click', onSave);
+      }
+      function onClose(){ modal.close(); cleanup(); }
+      async function onSave(ev){
+        ev.preventDefault(); saveBtn.disabled = true; saveBtn.textContent = 'Se salvează…';
+        try{
+          const payload = {
+            tableId: Number(id),
+            startAt: new Date(iso).toISOString(),
+            durationMinutes: Number(mDuration.value||'60'),
+            customerName: mName.value.trim(),
+            phone: mPhone.value.trim() || null,
+            partySize: mParty.value? Number(mParty.value) : null,
+            note: mNote.value.trim() || null
+          };
+          const r = await fetch(`${API_BASE}/reservations`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+          if(r.status === 201){
+            showToast('Rezervare creată!');
+            modal.close(); refreshStatus();
+          } else if(r.status === 409){
+            showToast('Ups, masa tocmai a fost rezervată. Încearcă altă masă sau oră.');
+          } else {
+            const txt = await r.text();
+            showToast('Eroare la salvare: ' + (txt||r.status));
+          }
+        }catch(err){
+          console.error(err); showToast('Eroare rețea către API.');
+        } finally { saveBtn.disabled = false; saveBtn.textContent = 'Confirmă rezervarea'; cleanup(); }
+      }
+
+      closeModal.addEventListener('click', onClose);
+      cancelBtn.addEventListener('click', onClose);
+      saveBtn.addEventListener('click', onSave);
+    }
+
+    // ===================== EDIT MODE (drag markers + export JSON) =====================
+    const editToggle = document.getElementById('editToggle');
+    const exportLayout = document.getElementById('exportLayout');
+    let editMode = false; let dragEl=null;
+
+    editToggle.addEventListener('click', ()=>{
+      editMode = !editMode; editToggle.classList.toggle('primary', editMode);
+      for(const el of tablesEl.querySelectorAll('.marker')){ el.dataset.edit = String(editMode); el.style.cursor = editMode? 'move': 'pointer'; }
+    });
+
+    exportLayout.addEventListener('click', ()=>{
+      const data = layout.map(p=>({ id:p.id, left:roundPct(getPctLeft(p.id)), top:roundPct(getPctTop(p.id)) }));
+      navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      localStorage.setItem('layout8', JSON.stringify(data));
+      showToast('Layout copiat în clipboard și salvat în LocalStorage.');
+    });
+
+    function roundPct(v){ return Math.max(0, Math.min(100, Math.round(v*10)/10)); }
+    function getPctLeft(id){ const el=tablesEl.querySelector(`.marker[data-id="${id}"]`); return (el.offsetLeft+el.offsetWidth/2)/tablesEl.clientWidth*100; }
+    function getPctTop(id){ const el=tablesEl.querySelector(`.marker[data-id="${id}"]`); return (el.offsetTop+el.offsetHeight/2)/tablesEl.clientHeight*100; }
+
+    tablesEl.addEventListener('pointerdown', (e)=>{
+      if(!editMode) return; const t = e.target; if(!(t instanceof HTMLElement) || !t.classList.contains('marker')) return;
+      dragEl = t; dragEl.setPointerCapture(e.pointerId);
+    });
+    tablesEl.addEventListener('pointermove', (e)=>{
+      if(!editMode || !dragEl) return;
+      const rect = tablesEl.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width * 100;
+      const y = (e.clientY - rect.top) / rect.height * 100;
+      dragEl.style.left = Math.max(0, Math.min(100, x)) + '%';
+      dragEl.style.top = Math.max(0, Math.min(100, y)) + '%';
+    });
+    const endDrag=()=>{ if(dragEl){ dragEl.releasePointerCapture; dragEl=null; } };
+    tablesEl.addEventListener('pointerup', endDrag); tablesEl.addEventListener('pointercancel', endDrag);
+
+    // Drag&drop imagine hartă (demo)
+    const stage = document.getElementById('stage');
+    stage.addEventListener('dragover', e=>{ e.preventDefault(); });
+    stage.addEventListener('drop', e=>{
+      e.preventDefault(); const f = e.dataTransfer?.files?.[0]; if(!f) return;
+      const reader = new FileReader(); reader.onload = ev => { backdrop.src = ev.target.result; }; reader.readAsDataURL(f);
+    });
+
+    // ===================== UTILS =====================
+    function toInputDate(d){ return d.toISOString().slice(0,10); }
+    function toInputTime(d){ return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+    function showToast(msg){ toast.textContent = msg; toast.style.display='block'; clearTimeout(showToast.t); showToast.t = setTimeout(()=>toast.style.display='none', 2200); }
+
+    // pornește cu un load de status implicit
+    refreshStatus();
+    </script>
+</body>
+</html>
