@@ -15,8 +15,7 @@ public static class ServiceCollectionExtensions
         {
             if (provider.Equals("postgres", StringComparison.OrdinalIgnoreCase))
                 opt.UseNpgsql(cs);
-            else
-                opt.UseSqlite(cs);
+
         });
 
         return services;

@@ -1,7 +1,12 @@
-﻿using Vanilla.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Vanilla.Data;
 using Vanilla.Reservari.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add this line to configure your DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Swagger + Controllers + CORS
 builder.Services.AddEndpointsApiExplorer();
