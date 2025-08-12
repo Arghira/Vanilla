@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --shadow: 0 10px 30px rgba(0,0,0,.35); }
+
+.card { @apply bg-panel border border-white/10 rounded-2xl shadow-xl; box-shadow: var(--shadow); }
+.card-h { @apply px-4 py-3 border-b border-white/10 flex items-center justify-between; }
+.card-c { @apply p-4; }
+.pill { @apply inline-flex items-center gap-2 px-3 py-1 rounded-full bg-panel2 text-muted border border-white/10; }
+
+.marker { @apply absolute grid place-items-center font-bold text-sm rounded-full select-none; width: 38px; height: 38px; transform: translate(-50%, -50%); filter: drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
+.marker.free { background: theme('colors.free'); color: #0f131a; }
+.marker.busy { background: theme('colors.busy'); color: #0b0f14; }
+
+.btn { @apply px-4 py-2 rounded-xl bg-panel2 border border-white/10 font-semibold hover:-translate-y-px transition; }
+.btn-primary { @apply bg-gradient-to-b from-[#192233] to-[#111726]; }
+.input, .select, .textarea { @apply w-full px-3 py-2 rounded-xl bg-panel2 border border-white/10 text-text; }
+.label { @apply block font-semibold text-muted mb-1; }
+.toast { @apply fixed right-4 bottom-4 bg-panel2 border border-white/10 rounded-xl px-4 py-3 hidden; box-shadow: var(--shadow); }
+
+.stage { @apply relative overflow-hidden rounded-2xl; min-height: 520px; background: #0e1117; border: 1px solid rgba(255,255,255,.08); }
+.stage img { @apply w-full; opacity: .95; user-select: none; pointer-events: none; }
+
+/* dialog */
+.dialog::backdrop { background: rgba(0,0,0,.45); }
+.dialog { @apply bg-panel text-text rounded-2xl border border-white/10 w-[min(560px,92vw)]; }

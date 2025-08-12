@@ -4,43 +4,62 @@ using Vanilla.Reservari.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add this line to configure your DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// ===================  DB: UN SINGUR AppDbContext  ===================
+var cs = builder.Configuration.GetConnectionString("DefaultConnection")
+         ?? throw new InvalidOperationException("Missing ConnectionStrings:DefaultConnection");
 
-// Swagger + Controllers + CORS
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(cs));
+
+// ===================  RESTUL SERVICIILOR  ===================
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+
+// CORS pentru dev (ajustează origin-urile după nevoie)
 builder.Services.AddCors(opt =>
 {
-    opt.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    opt.AddPolicy("AllowDev", p => p
+        .WithOrigins(
+            "http://localhost:5173", "https://localhost:5173",
+            "http://localhost:3000", "https://localhost:3000",
+            "http://localhost:5041", "https://localhost:7138"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 });
 
-// DB + Services (în extensii)
-builder.Services.AddPersistence(builder.Configuration);
+// IMPORTANT: NU mai înregistra DbContext și prin extensie.
+// Dacă AddPersistence() adaugă și DbContext, scoate-l sau modifică-l să NU o mai facă.
+//builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 var app = builder.Build();
-app.UseDefaultFiles();  // caută index.html în wwwroot
-app.UseStaticFiles();   // servește fișierele din wwwroot
 
-app.UseCors("AllowAll");
+// ===================  STATIC UI (wwwroot)  ===================
+app.UseDefaultFiles();   // trebuie înainte de UseStaticFiles
+app.UseStaticFiles();
 
-if (app.Environment.IsDevelopment())
+app.UseCors("AllowDev");
+
+// Swagger: Dev SAU dacă setezi env var Swagger__Enabled=true
+var swaggerEnabled = app.Environment.IsDevelopment()
+                   || app.Configuration.GetValue<bool>("Swagger:Enabled");
+if (swaggerEnabled)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(); // la /swagger
 }
 
-// Migrații/seed automat la pornire (prod/dev)
+// Migrații/seed la pornire
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    await DbInitializer.InitializeAsync(services);
+    await DbInitializer.InitializeAsync(scope.ServiceProvider);
 }
 
 app.MapControllers();
-app.MapGet("/", () => Results.Redirect("/swagger"));
+
+// SPA fallback (rute necunoscute -> index.html din wwwroot)
+app.MapFallbackToFile("/index.html");
 
 app.Run();

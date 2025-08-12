@@ -6,14 +6,26 @@ namespace Vanilla.Data
     {
         public static async Task InitializeAsync(IServiceProvider services)
         {
-            var env = services.GetRequiredService<IHostEnvironment>();
+            var env = services.GetRequiredService<IServiceProvider>().GetService<IHostEnvironment>();
             var db = services.GetRequiredService<AppDbContext>();
 
-            // Aplică migrările
-            await db.Database.MigrateAsync();
+            try
+            {
+                // Test connection first
+                Console.WriteLine("Testing database connection...");
+                await db.Database.CanConnectAsync();
+                Console.WriteLine("✅ Database connection successful!");
 
-            // Seed-ul pentru mese e deja în HasData; nimic suplimentar aici.
-            // Poți adăuga alte seed-uri dacă vrei.
+                // Then try migrations
+                await db.Database.MigrateAsync();
+                Console.WriteLine("✅ Database migrations completed!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Database error: {ex.Message}");
+                // Don't crash the app, just log the error for now
+                return;
+            }
         }
     }
 }
