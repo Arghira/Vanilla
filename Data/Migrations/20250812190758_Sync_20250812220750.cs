@@ -5,7 +5,7 @@
 namespace Vanilla.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Sync_20250812215944 : Migration
+    public partial class Sync_20250812220750 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

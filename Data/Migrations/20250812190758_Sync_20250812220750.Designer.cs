@@ -8,11 +8,11 @@ using Vanilla.Data;
 
 #nullable disable
 
-namespace Vanilla.Migrations
+namespace Vanilla.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250812150954_Init")]
-    partial class Init
+    [Migration("20250812190758_Sync_20250812220750")]
+    partial class Sync_20250812220750
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
