@@ -43,7 +43,7 @@ namespace Vanilla.Services
                 .Select(r => r.TableId)
                 .ToListAsync(ct);
 
-            return Enumerable.Range(1, 8)
+            return Enumerable.Range(1, 11)
                 .Select(i => new TableStatusDto
                 {
                     TableId = (short)i,
@@ -54,7 +54,7 @@ namespace Vanilla.Services
 
         public async Task<long> CreateReservationAsync(CreateReservationDto dto, CancellationToken ct)
         {
-            if (dto.TableId is < 1 or > 8)
+            if (dto.TableId is < 1 or > 11)
                 throw new ArgumentOutOfRangeException(nameof(dto.TableId), "TableId trebuie 1..8");
 
             var startUtc = DateTime.SpecifyKind(dto.StartAt, DateTimeKind.Utc);

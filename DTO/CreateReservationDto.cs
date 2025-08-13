@@ -4,7 +4,7 @@ namespace Vanilla.DTO
 {
     public class CreateReservationDto
     {
-        [Range(1, 8)]
+        [Range(1, 11, ErrorMessage = "TableId must be between 1 and 11.")]
         public short TableId { get; set; }
 
         [Required]

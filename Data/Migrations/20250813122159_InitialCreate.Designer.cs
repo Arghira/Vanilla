@@ -9,10 +9,10 @@ using Vanilla.Data;
 
 #nullable disable
 
-namespace Vanilla.Migrations
+namespace Vanilla.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250812200852_InitialCreate")]
+    [Migration("20250813122159_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -151,6 +151,21 @@ namespace Vanilla.Migrations
                         {
                             Id = (short)8,
                             Name = "Masa 8"
+                        },
+                        new
+                        {
+                            Id = (short)9,
+                            Name = "Masa 9"
+                        },
+                        new
+                        {
+                            Id = (short)10,
+                            Name = "Masa 10"
+                        },
+                        new
+                        {
+                            Id = (short)11,
+                            Name = "Masa 11"
                         });
                 });
 

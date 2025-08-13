@@ -26,7 +26,11 @@ namespace Vanilla.Data
                 new TableEntity { Id = 5, Name = "Masa 5" },
                 new TableEntity { Id = 6, Name = "Masa 6" },
                 new TableEntity { Id = 7, Name = "Masa 7" },
-                new TableEntity { Id = 8, Name = "Masa 8" }
+                new TableEntity { Id = 8, Name = "Masa 8" },
+                new TableEntity { Id = 9, Name = "Masa 9" },
+                new TableEntity { Id = 10, Name = "Masa 10" },
+                new TableEntity { Id = 11, Name = "Masa 11" }
+
             );
 
             // Admin seed — deterministic Guid
