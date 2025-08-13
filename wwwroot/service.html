@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vanilla · Acasă</title>
+    <title>Vanilla · Service Auto</title>
     <style>
         :root {
             --panel: #171a21;
-            --panel2: #1d2230;
             --text: #e6eaf2;
             --muted: #9aa4b2;
             --gold: #d4af37;
@@ -59,75 +58,49 @@
         }
 
         .wrap {
-            max-width: 1100px;
-            margin: 34px auto;
+            max-width: 1000px;
+            margin: 24px auto;
             padding: 0 16px
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-            gap: 18px
-        }
-
         .card {
-            display: block;
-            text-decoration: none;
-            color: var(--text);
             background: var(--panel);
             border: 1px solid rgba(255,255,255,.08);
             border-radius: 18px;
-            padding: 26px;
-            min-height: 240px;
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
+            padding: 24px
         }
 
-            .card:hover {
-                transform: translateY(-2px)
-            }
-
-        .title {
-            font-size: 28px;
-            margin: 0 0 6px;
-            font-weight: 800
+        .muted {
+            color: var(--muted)
         }
 
-        .desc {
-            color: var(--muted);
-            margin: 0 0 14px
-        }
-
-        .cta {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            background: linear-gradient(135deg,var(--gold),#b8860b);
-            color: #000;
-            font-weight: 700
+        ul {
+            margin: 10px 0 0 18px
         }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">🦄</div>
-        <h1>Vanilla · Bine ai venit</h1>
+        <h1>Vanilla · Service Auto</h1>
     </header>
 
     <main class="wrap">
-        <div class="grid">
-            <a class="card" href="/vanilla.html">
-                <h2 class="title">Vanilla Club – Rezervări</h2>
-                <p class="desc">Rezervă rapid o masă pe harta clubului, vizualizează disponibilitatea în timp real.</p>
-                <span class="cta">Deschide Rezervări →</span>
-            </a>
-
-            <a class="card" href="/service.html">
-                <h2 class="title">Service Auto</h2>
-                <p class="desc">Întreținere, diagnoză, mecanică, detailing. Program și contact.</p>
-                <span class="cta">Vezi detalii →</span>
-            </a>
-        </div>
+        <article class="card">
+            <h2>Întreținere & reparații</h2>
+            <p class="muted">Diagnoză, mecanică, frâne, distribuții, geometrie, AC, detailing.</p>
+            <ul>
+                <li>Diagnoză computerizată</li>
+                <li>Schimb ulei/filtre, frâne, distribuții</li>
+                <li>Suspensii & geometrie roți</li>
+                <li>Climatizare: încărcare & igienizare</li>
+                <li>Detailing: polish & protecție</li>
+            </ul>
+            <hr>
+            <p><strong>Program:</strong> L–V 9:00–18:00 • <strong>Tel:</strong> 07xx xxx xxx • <strong>Email:</strong> service@vanilla.ro</p>
+            <p><a href="/index.html" class="muted">← Înapoi la acasă</a></p>
+        </article>
     </main>
 </body>
 </html>

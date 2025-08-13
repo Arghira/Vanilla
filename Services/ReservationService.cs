@@ -3,95 +3,111 @@ using Vanilla.Data;
 using Vanilla.DTO;
 using Vanilla.Models;
 
-namespace Vanilla.Services
+namespace Vanilla.Services;
+
+public class ReservationService : IReservationService
 {
-    public class ReservationService(AppDbContext db) : IReservationService
+    private readonly AppDbContext _db;
+    public ReservationService(AppDbContext db) => _db = db;
+
+    public async Task<IReadOnlyList<ReservationDto>> GetReservationsAsync(
+        DateTime? from, DateTime? to, CancellationToken ct)
     {
-        public async Task<IReadOnlyList<ReservationDto>> GetReservationsAsync(
-            DateTime? from, DateTime? to, CancellationToken ct)
+        // toate momentele în UTC
+        DateTime? fromUtc = from.HasValue ? DateTime.SpecifyKind(from.Value, DateTimeKind.Utc) : null;
+        DateTime? toUtc = to.HasValue ? DateTime.SpecifyKind(to.Value, DateTimeKind.Utc) : null;
+
+        var q = _db.Reservations.AsNoTracking();
+
+        if (fromUtc.HasValue) q = q.Where(r => r.StartAt >= fromUtc.Value);
+        if (toUtc.HasValue) q = q.Where(r => r.StartAt < toUtc.Value);
+
+        var items = await q.OrderBy(r => r.StartAt).ToListAsync(ct);
+
+        return items.Select(r => new ReservationDto
         {
-            var q = db.Reservations.AsNoTracking().AsQueryable();
+            Id = r.Id,
+            TableId = r.TableId,
+            StartAt = r.StartAt,                 // UTC
+            DurationMinutes = r.DurationMinutes,
+            CustomerName = r.CustomerName,
+            Phone = r.Phone,
+            PartySize = r.PartySize,
+            Note = r.Note
+        }).ToList();
+    }
 
-            if (from.HasValue)
-                q = q.Where(r => r.StartAt >= DateTime.SpecifyKind(from.Value, DateTimeKind.Utc));
-            if (to.HasValue)
-                q = q.Where(r => r.StartAt < DateTime.SpecifyKind(to.Value, DateTimeKind.Utc));
+    public async Task<long> CreateReservationAsync(CreateReservationDto dto, CancellationToken ct)
+    {
+        if (dto.DurationMinutes <= 0) throw new ArgumentOutOfRangeException(nameof(dto.DurationMinutes));
 
-            return await q
-                .OrderBy(r => r.StartAt)
-                .Select(r => new ReservationDto
-                {
-                    Id = r.Id,
-                    TableId = r.TableId,
-                    StartAt = r.StartAt,
-                    DurationMinutes = r.DurationMinutes,
-                    CustomerName = r.CustomerName,
-                    Phone = r.Phone,
-                    PartySize = r.PartySize,
-                    Note = r.Note
-                })
-                .ToListAsync(ct);
-        }
+        var startUtc = DateTime.SpecifyKind(dto.StartAt, DateTimeKind.Utc);
+        var endUtc = startUtc.AddMinutes(dto.DurationMinutes);
 
-        public async Task<IReadOnlyList<TableStatusDto>> GetStatusForSlotAsync(DateTime startAtUtc, CancellationToken ct)
+        // suprapunere corectă: [a,b) și [c,d) se suprapun dacă a < d && c < b
+        bool overlaps = await _db.Reservations
+            .Where(r => r.TableId == dto.TableId)
+            .AnyAsync(r =>
+                r.StartAt < endUtc &&
+                startUtc < r.StartAt.AddMinutes(r.DurationMinutes), ct);
+
+        if (overlaps)
+            throw new InvalidOperationException("Intervalul se suprapune peste o rezervare existentă.");
+
+        var entity = new Reservation
         {
-            var normalized = DateTime.SpecifyKind(startAtUtc, DateTimeKind.Utc);
+            TableId = (short)dto.TableId,
+            StartAt = startUtc, // stocăm UTC
+            DurationMinutes = dto.DurationMinutes,
+            CustomerName = dto.CustomerName,
+            Phone = dto.Phone,
+            PartySize = dto.PartySize,
+            Note = dto.Note
+        };
 
-            var reserved = await db.Reservations
+        _db.Reservations.Add(entity);
+        await _db.SaveChangesAsync(ct);
+
+        return entity.Id;
+    }
+
+    public async Task<bool> DeleteReservationAsync(long id, CancellationToken ct)
+    {
+        var e = await _db.Reservations.FirstOrDefaultAsync(x => x.Id == id, ct);
+        if (e is null) return false;
+        _db.Reservations.Remove(e);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public async Task<IReadOnlyList<TableStatusDto>> GetStatusForSlotAsync(
+    DateTime startAtUtc, CancellationToken ct)
+    {
+        var slotUtc = DateTime.SpecifyKind(startAtUtc, DateTimeKind.Utc);
+
+        // luăm toate mesele ordonate
+        var ids = await _db.Tables
+            .AsNoTracking()
+            .OrderBy(t => t.Id)
+            .Select(t => t.Id)
+            .ToListAsync(ct);
+
+        var result = new List<TableStatusDto>(ids.Count);
+
+        foreach (var id in ids)
+        {
+            // inclusiv la început, exclusiv la final: [Start, End)
+            bool reserved = await _db.Reservations
                 .AsNoTracking()
-                .Where(r => r.StartAt == normalized)
-                .Select(r => r.TableId)
-                .ToListAsync(ct);
+                .AnyAsync(r =>
+                    r.TableId == id &&
+                    r.StartAt <= slotUtc &&                              // <= start
+                    slotUtc < r.StartAt.AddMinutes(r.DurationMinutes),  //  < end
+                    ct);
 
-            return Enumerable.Range(1, 11)
-                .Select(i => new TableStatusDto
-                {
-                    TableId = (short)i,
-                    IsReserved = reserved.Contains((short)i)
-                })
-                .ToList();
+            result.Add(new TableStatusDto { TableId = id, IsReserved = reserved });
         }
 
-        public async Task<long> CreateReservationAsync(CreateReservationDto dto, CancellationToken ct)
-        {
-            if (dto.TableId is < 1 or > 11)
-                throw new ArgumentOutOfRangeException(nameof(dto.TableId), "TableId trebuie 1..8");
-
-            var startUtc = DateTime.SpecifyKind(dto.StartAt, DateTimeKind.Utc);
-
-            var entity = new Reservation
-            {
-                TableId = dto.TableId,
-                StartAt = startUtc,
-                DurationMinutes = dto.DurationMinutes <= 0 ? 60 : dto.DurationMinutes,
-                CustomerName = dto.CustomerName,
-                Phone = dto.Phone,
-                PartySize = dto.PartySize,
-                Note = dto.Note,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            db.Reservations.Add(entity);
-            try
-            {
-                await db.SaveChangesAsync(ct);
-                return entity.Id;
-            }
-            catch (DbUpdateException ex) when
-                (ex.InnerException?.Message.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase) == true)
-            {
-                // traducem într-o excepție controlată (poți face un tip custom)
-                throw new InvalidOperationException("Masa este deja rezervată pentru acest interval.");
-            }
-        }
-
-        public async Task<bool> DeleteReservationAsync(long id, CancellationToken ct)
-        {
-            var res = await db.Reservations.FindAsync([id], ct);
-            if (res is null) return false;
-            db.Remove(res);
-            await db.SaveChangesAsync(ct);
-            return true;
-        }
+        return result;
     }
 }

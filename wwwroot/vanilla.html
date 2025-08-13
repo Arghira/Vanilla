@@ -1,0 +1,858 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vanilla Unicorn – Rezervări</title>
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #171a21;
+            --panel-2: #1d2230;
+            --text: #e6eaf2;
+            --muted: #9aa4b2;
+            --accent: #8ef0cf;
+            --accent-2: #50c8ff;
+            --danger: #ff6b6b;
+            --gold: #d4af37;
+            --shadow: 0 10px 30px rgba(0,0,0,.35)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
+            font: 14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 22px;
+            background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(6px)
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+            .brand .logo {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: conic-gradient(from 180deg at 50% 50%, var(--gold), #b8860b, var(--gold));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                font-weight: 700;
+                color: #000;
+                box-shadow: 0 0 0 2px #12141a inset
+            }
+
+            .brand h1 {
+                margin: 0;
+                font-size: 18px;
+                letter-spacing: .3px;
+                background: linear-gradient(135deg,var(--gold),#fff);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent
+            }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            appearance: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: var(--panel-2);
+            color: var(--text);
+            transition: transform .06s ease, box-shadow .2s ease, background .2s ease
+        }
+
+            .btn:focus-visible {
+                outline: 2px solid color-mix(in srgb, var(--accent) 60%, #fff);
+                outline-offset: 2px;
+                box-shadow: 0 0 0 6px rgba(142,240,207,.15)
+            }
+
+            .btn:hover {
+                transform: translateY(-1px)
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg,var(--gold),#b8860b);
+                color: #000;
+                border-color: rgba(255,255,255,.08)
+            }
+
+            .btn[aria-busy="true"] {
+                position: relative;
+                pointer-events: none;
+                opacity: .85
+            }
+
+                .btn[aria-busy="true"]::after {
+                    content: "";
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    width: 16px;
+                    height: 16px;
+                    margin-top: -8px;
+                    border: 2px solid #000;
+                    border-right-color: transparent;
+                    border-radius: 50%;
+                    animation: spin .8s linear infinite
+                }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            max-width: 1400px;
+            margin: 10px auto 0;
+            padding: 0 16px;
+            display: flex;
+            gap: 8px
+        }
+
+        .tab {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,.12);
+            background: var(--panel-2);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+            .tab:hover {
+                transform: translateY(-1px)
+            }
+
+            .tab.active {
+                background: linear-gradient(135deg,var(--gold),#b8860b);
+                color: #000;
+                border-color: rgba(255,255,255,.08)
+            }
+
+        .tab-panel.hidden {
+            display: none
+        }
+
+        .layout {
+            max-width: 1400px;
+            margin: 22px auto;
+            padding: 0 16px;
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 340px 1fr
+        }
+
+        @media (max-width:980px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 18px;
+            box-shadow: var(--shadow)
+        }
+
+        .card-h {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        .card-c {
+            padding: 16px
+        }
+
+        .controls .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px
+        }
+
+        .controls label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--muted)
+        }
+
+        .controls input, .controls select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--panel-2);
+            color: var(--muted);
+            border: 1px solid rgba(255,255,255,.06)
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+            .dot.free {
+                background: var(--accent)
+            }
+
+            .dot.busy {
+                background: var(--danger)
+            }
+
+        .stage {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            min-height: 600px;
+            background: #0e1117;
+            border: 1px solid rgba(255,255,255,.06)
+        }
+
+            .stage .backdrop {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center;
+                display: block;
+                user-select: none;
+                pointer-events: none;
+                background: #0f1115
+            }
+
+        .tables {
+            position: absolute;
+            inset: 0
+        }
+
+        .marker {
+            --size: 38px;
+            position: absolute;
+            width: var(--size);
+            height: var(--size);
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: #0f131a;
+            cursor: pointer;
+            user-select: none;
+            border: 2px solid rgba(255,255,255,.25);
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,.7));
+            transition: transform .12s ease,filter .12s ease,opacity .2s ease,box-shadow .2s ease
+        }
+
+            .marker:focus-visible {
+                outline: 3px solid color-mix(in srgb, var(--accent-2) 70%, #fff);
+                outline-offset: 2px
+            }
+
+            .marker:hover {
+                transform: translate(-50%,-50%) scale(1.15);
+                z-index: 10
+            }
+
+            .marker.free {
+                background: var(--accent);
+                box-shadow: 0 0 0 0 rgba(142,240,207,.45);
+                animation: glow 2s ease-out infinite
+            }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(142,240,207,.45)
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(142,240,207,0)
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(142,240,207,0)
+            }
+        }
+
+        .marker.busy {
+            background: var(--danger);
+            color: #0b0f14;
+            box-shadow: 0 0 15px rgba(255,107,107,.35)
+        }
+
+        .toast {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.08);
+            padding: 12px 14px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: none
+        }
+
+        dialog {
+            border: none;
+            border-radius: 16px;
+            padding: 0;
+            background: var(--panel);
+            color: var(--text);
+            width: min(560px,92vw)
+        }
+
+            dialog::backdrop {
+                background: rgba(0,0,0,.6)
+            }
+
+        .modal-h {
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(212,175,55,.12), rgba(184,134,11,.08))
+        }
+
+        .modal-c {
+            padding: 16px 18px
+        }
+
+        .modal-f {
+            padding: 16px 18px;
+            border-top: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end
+        }
+
+        .xbtn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 20px;
+            cursor: pointer
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        @media (max-width:560px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .modal-c label {
+            font-weight: 600;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px
+        }
+
+        .modal-c input, .modal-c textarea, .modal-c select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: var(--panel-2);
+            color: var(--text)
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        /* === Time picker (fixed) === */
+        .timepicker {
+            position: relative
+        }
+
+            .timepicker .inputlike {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid rgba(255,255,255,.08);
+                background: var(--panel-2);
+                color: var(--text);
+                cursor: pointer
+            }
+
+            .timepicker .caret {
+                width: 0;
+                height: 0;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid rgba(255,255,255,.6)
+            }
+
+        .timepanel {
+            position: absolute; /* anchor to wrapper */
+            left: 0;
+            top: calc(100% + 6px); /* just below the button */
+            width: max(220px, 100%);
+            max-height: 320px;
+            display: none;
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 8px;
+            z-index: 40;
+        }
+
+            .timepanel.open {
+                display: block
+            }
+
+            .timepanel .grid {
+                display: grid;
+                gap: 6px;
+                grid-template-columns: repeat(2,1fr);
+                max-height: 260px;
+                overflow: auto;
+                padding: 4px
+            }
+
+            .timepanel .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 6px 8px 8px;
+                gap: 8px
+            }
+
+            .timepanel .search {
+                width: 100%;
+                padding: 10px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(255,255,255,.10);
+                background: var(--panel-2);
+                color: var(--text)
+            }
+
+        .kbd {
+            font-size: 11px;
+            padding: 2px 6px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 6px;
+            color: var(--muted)
+        }
+
+        .timeopt {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            background: var(--panel-2);
+            color: var(--text);
+            font-weight: 600;
+            transition: background .15s ease, transform .06s ease
+        }
+
+            .timeopt:hover {
+                background: #20283a;
+                transform: translateY(-1px)
+            }
+
+            .timeopt[aria-selected="true"] {
+                outline: 2px solid color-mix(in srgb, var(--accent-2) 70%, #fff)
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <div class="logo">🦄</div>
+            <h1>Vanilla Unicorn · Rezervări</h1>
+        </div>
+        <div class="toolbar"></div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Secțiuni">
+        <button class="tab active" data-tab="reservation" role="tab" aria-selected="true">Rezervări</button>
+        <button class="tab" data-tab="service" role="tab" aria-selected="false">Service Auto</button>
+    </nav>
+
+    <section id="panel-reservation" class="tab-panel" role="tabpanel" aria-labelledby="tab-reservation">
+        <main class="layout">
+            <section class="card controls" aria-label="Filtre și acțiuni">
+                <div class="card-h">
+                    <strong>Selectează intervalul</strong>
+                    <small id="availabilityMeta" class="subtext" aria-live="polite"></small>
+                </div>
+                <div class="card-c">
+                    <div class="row">
+                        <div style="flex:1">
+                            <label for="date">Data</label>
+                            <input id="date" type="date" />
+                        </div>
+
+                        <div style="width:170px">
+                            <label for="time">Ora</label>
+                            <div class="timepicker" id="timepicker">
+                                <button type="button" class="inputlike" id="timeBtn" aria-haspopup="listbox" aria-expanded="false">
+                                    <span id="timeLabel">--:--</span><span class="caret" aria-hidden="true"></span>
+                                </button>
+                                <div class="timepanel" id="timePanel">
+                                    <div class="header">
+                                        <input class="search" id="timeSearch" placeholder="Caută (ex. 21:30)" aria-label="Caută ora" />
+                                        <span class="kbd">Esc</span>
+                                    </div>
+                                    <div class="grid" id="timeGrid" role="listbox" aria-label="Alege ora"></div>
+                                </div>
+                                <input id="time" type="hidden" />
+                            </div>
+                        </div>
+
+                        <div style="width:150px">
+                            <label for="duration">Durata</label>
+                            <select id="duration">
+                                <option value="60">60 min</option>
+                                <option value="90">90 min</option>
+                                <option value="120" selected>120 min</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row"><button id="check" class="btn primary">Verifică disponibilitatea</button></div>
+                    <div class="legend">
+                        <span class="pill"><span class="dot free"></span> Liber</span>
+                        <span class="pill"><span class="dot busy"></span> Rezervat</span>
+                        <span class="subtext">* Click pe o masă liberă pentru rezervare</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-h">
+                    <strong>Plan Vanilla Unicorn</strong>
+                    <small class="subtext">Club Layout cu 11 mese</small>
+                </div>
+                <div id="stage" class="card-c stage">
+                    <img id="backdrop" class="backdrop" alt="Plan Vanilla Unicorn" />
+                    <div class="tables" id="tables" aria-live="polite"></div>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section id="panel-service" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-service">
+        <main class="layout">
+            <section class="card" style="grid-column:1/-1">
+                <div class="card-h">
+                    <strong>Service Auto</strong>
+                    <small class="subtext">Întreținere, diagnoză, reparații & detailing</small>
+                </div>
+                <div class="card-c">
+                    <p>Bine ai venit la <strong>Vanilla Service</strong>. Oferim pachete complete de întreținere și reparații, cu program flexibil și piese originale / OEM.</p>
+                    <ul>
+                        <li>Diagnoză computerizată & electrice</li>
+                        <li>Schimb ulei, filtre, plăcuțe, discuri, distribuții</li>
+                        <li>Geometrie & suspensii</li>
+                        <li>Climatizare (încărcare, dezinfectare)</li>
+                        <li>Detailing / polish / protecție ceramică</li>
+                    </ul>
+                    <hr style="border-color:rgba(255,255,255,.06);border-top:none;border-bottom:1px solid rgba(255,255,255,.06);margin:14px 0">
+                    <p><strong>Program:</strong> Luni–Vineri 9:00–18:00 • <strong>Telefon:</strong> 07xx xxx xxx • <strong>Adresă:</strong> Str. Exemplu 123</p>
+                    <p class="subtext">Pentru programări: <em>service@vanilla.ro</em></p>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <dialog id="modal">
+        <form method="dialog" id="reservationForm">
+            <div class="modal-h">
+                <strong>Rezervare masă <span id="mTable"></span></strong>
+                <button type="button" class="xbtn" id="closeModal" aria-label="Închide">×</button>
+            </div>
+            <div class="modal-c">
+                <div style="margin-bottom:10px" class="subtext">Interval: <span id="mWhen"></span></div>
+                <div class="grid">
+                    <div><label for="mName">Nume</label><input id="mName" required placeholder="Nume și prenume" /></div>
+                    <div><label for="mPhone">Telefon</label><input id="mPhone" placeholder="07xx xxx xxx" /></div>
+                    <div><label for="mParty">Numărul persoanelor</label><input id="mParty" type="number" min="1" max="20" value="2" /></div>
+                    <div>
+                        <label for="mDuration">Durata</label>
+                        <select id="mDuration"><option value="60">60 min</option><option value="90">90 min</option><option value="120" selected>120 min</option></select>
+                    </div>
+                    <div style="grid-column:1/-1"><label for="mNote">Notă specială</label><textarea id="mNote" rows="3" placeholder="Preferințe / ocazie specială / cerințe VIP"></textarea></div>
+                </div>
+            </div>
+            <div class="modal-f">
+                <button type="button" class="btn ghost" id="cancelBtn">Anulează</button>
+                <button id="saveBtn" class="btn primary" value="default">Confirmă rezervarea</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        /* ===== Background + static layout ===== */
+        const BACKGROUND_SRC = './plan4.png';
+        const LAYOUT_STATIC = Object.freeze([
+            { id: 1, left: 48.0, top: 27.3 }, { id: 2, left: 50.5, top: 40.0 }, { id: 3, left: 58.5, top: 34.0 },
+            { id: 4, left: 62.5, top: 45.0 }, { id: 5, left: 70.0, top: 45.0 }, { id: 6, left: 47.0, top: 54.0 },
+            { id: 7, left: 62.5, top: 55.0 }, { id: 8, left: 70.0, top: 55.0 }, { id: 9, left: 48.0, top: 73.0 },
+            { id: 10, left: 57.2, top: 73.0 }, { id: 11, left: 27.5, top: 80.0 }
+        ]);
+        const layout = LAYOUT_STATIC;
+        const API_BASE = window.location.origin;
+
+        const backdrop = document.getElementById('backdrop');
+        if (backdrop) backdrop.src = BACKGROUND_SRC;
+
+        /* ===== Tabs ===== */
+        const tabButtons = document.querySelectorAll('.tab');
+        const panels = { reservation: document.getElementById('panel-reservation'), service: document.getElementById('panel-service') };
+        function showTab(name) {
+            tabButtons.forEach(b => {
+                const on = b.dataset.tab === name;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            Object.values(panels).forEach(p => p.classList.add('hidden'));
+            panels[name].classList.remove('hidden');
+            if (name === 'reservation') refreshStatus();
+        }
+        tabButtons.forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+        /* ===== Time picker (anchored) ===== */
+        const timepickerEl = document.getElementById('timepicker');
+        const timeBtn = document.getElementById('timeBtn');
+        const timeLabel = document.getElementById('timeLabel');
+        const timeInput = document.getElementById('time');     // hidden HH:mm
+        const timePanel = document.getElementById('timePanel');
+        const timeGrid = document.getElementById('timeGrid');
+        const timeSearch = document.getElementById('timeSearch');
+
+        const timeOptions = (() => { const o = []; let d = new Date(); d.setHours(12, 0, 0, 0); const end = new Date(d); end.setHours(28, 0, 0, 0); while (d <= end) { o.push(d.toTimeString().slice(0, 5)); d = new Date(d.getTime() + 30 * 60000); } return o; })();
+        function renderTimeOptions(filter = "") {
+            const f = filter.trim().toLowerCase(); timeGrid.innerHTML = "";
+            const list = timeOptions.filter(t => t.includes(f));
+            for (const t of list) {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'timeopt'; b.textContent = t; b.role = 'option';
+                b.setAttribute('aria-selected', t === timeInput.value ? 'true' : 'false');
+                b.addEventListener('click', () => selectTime(t, true));
+                b.addEventListener('mouseenter', () => b.focus({ preventScroll: true }));
+                timeGrid.appendChild(b);
+            }
+            setTimeout(() => timeGrid.querySelector('.timeopt[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }), 0);
+        }
+        function openTimePanel() {
+            renderTimeOptions();
+            timePanel.classList.add('open');
+            timeBtn.setAttribute('aria-expanded', 'true');
+            timeSearch.value = "";
+            setTimeout(() => timeSearch.focus(), 10);
+            document.addEventListener('mousedown', onClickOutside);
+            document.addEventListener('keydown', onTimeKey);
+        }
+        function closeTimePanel() {
+            timePanel.classList.remove('open');
+            timeBtn.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('mousedown', onClickOutside);
+            document.removeEventListener('keydown', onTimeKey);
+        }
+        function onClickOutside(e) { if (!timepickerEl.contains(e.target)) closeTimePanel(); }
+        function onTimeKey(e) {
+            if (e.key === 'Escape') { closeTimePanel(); timeBtn.focus(); }
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const a = [...timeGrid.querySelectorAll('.timeopt')]; if (!a.length) return;
+                const i = a.findIndex(x => x === document.activeElement);
+                const n = e.key === 'ArrowDown' ? Math.min(i + 1, a.length - 1) : Math.max(i - 1, 0);
+                (a[n] || a[0]).focus();
+            }
+            if (e.key === 'Enter' && document.activeElement?.classList.contains('timeopt')) document.activeElement.click();
+        }
+        function selectTime(t, announce) { timeInput.value = t; timeLabel.textContent = t; closeTimePanel(); if (announce) refreshStatus(); }
+        timeBtn.addEventListener('click', () => timePanel.classList.contains('open') ? closeTimePanel() : openTimePanel());
+        timeSearch.addEventListener('input', e => renderTimeOptions(e.target.value));
+
+        /* ===== Elements & defaults ===== */
+        const elDate = document.getElementById('date');
+        const elDur = document.getElementById('duration');
+        const btnCheck = document.getElementById('check');
+        const tablesEl = document.getElementById('tables');
+        const toast = document.getElementById('toast');
+        const availabilityMeta = document.getElementById('availabilityMeta');
+
+        const now = new Date(); now.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
+        elDate.value = toInputDate(now);
+        const startDefault = (() => { const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; return timeOptions.includes(hhmm) ? hhmm : timeOptions[0]; })();
+        selectTime(startDefault, false);
+
+        btnCheck?.addEventListener('click', refreshStatus);
+        elDate?.addEventListener('change', refreshStatus);
+
+        function buildMarkers() {
+            tablesEl.innerHTML = '';
+            for (const pos of layout) {
+                const m = document.createElement('button');
+                m.className = 'marker'; m.dataset.id = String(pos.id);
+                m.style.left = pos.left + '%'; m.style.top = pos.top + '%';
+                m.setAttribute('aria-label', `Masa ${pos.id}`); m.setAttribute('tabindex', '0');
+                m.textContent = String(pos.id);
+                m.addEventListener('click', () => onMarkerClick(pos.id));
+                m.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); m.click(); } });
+                tablesEl.appendChild(m);
+            }
+        }
+        buildMarkers();
+
+        /* ===== Status & reservation ===== */
+        async function refreshStatus() {
+            const { iso, human } = currentSlotIso();
+            btnCheck?.setAttribute('aria-busy', 'true');
+            showToast('Se încarcă disponibilitatea…');
+            try {
+                const r = await fetch(`${API_BASE}/status?startAt=${encodeURIComponent(iso)}`);
+                if (!r.ok) throw new Error('Eroare la citirea statusului.');
+                const data = await r.json();
+                const map = new Map(data.map(x => [x.tableId, x.isReserved]));
+                let freeCount = 0;
+                for (const el of tablesEl.querySelectorAll('.marker')) {
+                    const id = Number(el.dataset.id);
+                    const busy = map.get(id) === true;
+                    el.classList.toggle('busy', busy);
+                    el.classList.toggle('free', !busy);
+                    if (!busy) freeCount++;
+                    el.title = `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} — ${human}`;
+                }
+                availabilityMeta.textContent = `${freeCount} ${freeCount === 1 ? 'masă liberă' : 'mese libere'} la ${human}`;
+                showToast('Disponibilitatea a fost actualizată.');
+            } catch (err) { console.error(err); showToast('Nu am putut încărca statusul (verifică API și CORS).'); }
+            finally { btnCheck?.removeAttribute('aria-busy'); }
+        }
+
+        function currentSlotIso() {
+            const d = elDate.value; const t = timeInput.value || '20:00';
+            const local = new Date(`${d}T${t}:00`);
+            return { iso: local.toISOString(), human: local.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }), local };
+        }
+
+        /* ===== Modal ===== */
+        const modal = document.getElementById('modal');
+        const mTable = document.getElementById('mTable');
+        const mWhen = document.getElementById('mWhen');
+        const mName = document.getElementById('mName');
+        const mPhone = document.getElementById('mPhone');
+        const mParty = document.getElementById('mParty');
+        const mDuration = document.getElementById('mDuration');
+        const mNote = document.getElementById('mNote');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+
+        function onMarkerClick(id) {
+            const el = tablesEl.querySelector(`.marker[data-id="${id}"]`);
+            if (el.classList.contains('busy')) return;
+            const { iso, human } = currentSlotIso();
+            mTable.textContent = id; mWhen.textContent = human; mDuration.value = Number(document.getElementById('duration').value);
+            mName.value = ''; mPhone.value = ''; mParty.value = '2'; mNote.value = '';
+            modal.showModal();
+
+            function cleanup() { closeModal.removeEventListener('click', onClose); cancelBtn.removeEventListener('click', onClose); saveBtn.removeEventListener('click', onSave); }
+            function onClose() { modal.close(); cleanup(); }
+            async function onSave(ev) {
+                ev.preventDefault(); saveBtn.setAttribute('aria-busy', 'true');
+                try {
+                    const payload = {
+                        tableId: Number(id), startAt: new Date(iso).toISOString(), durationMinutes: Number(mDuration.value || '60'),
+                        customerName: mName.value.trim(), phone: mPhone.value.trim() || null, partySize: mParty.value ? Number(mParty.value) : null, note: mNote.value.trim() || null
+                    };
+                    const r = await fetch(`${API_BASE}/reservations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (r.status === 201) { showToast('Rezervare creată cu succes!'); modal.close(); refreshStatus(); }
+                    else if (r.status === 409) { showToast('Ups, masa tocmai a fost rezervată. Încearcă altă masă sau oră.'); }
+                    else { const txt = await r.text(); showToast('Eroare la salvare: ' + (txt || r.status)); }
+                } catch (err) { console.error(err); showToast('Eroare rețea către API.'); }
+                finally { saveBtn.removeAttribute('aria-busy'); cleanup(); }
+            }
+            closeModal.addEventListener('click', onClose);
+            cancelBtn.addEventListener('click', onClose);
+            saveBtn.addEventListener('click', onSave);
+        }
+
+        /* ===== Utils ===== */
+        function toInputDate(d) { return d.toISOString().slice(0, 10); }
+        function showToast(msg) { const toast = document.getElementById('toast'); toast.textContent = msg; toast.style.display = 'block'; clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.style.display = 'none', 2500); }
+
+        // Start on Rezervări
+        showTab('reservation');
+    </script>
+</body>
+</html>
