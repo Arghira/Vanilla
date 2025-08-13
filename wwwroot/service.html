@@ -6,11 +6,16 @@
     <title>Vanilla · Service Auto</title>
     <style>
         :root {
-            --panel: #171a21;
+            --bg: #0b0e15;
+            --panel: #131722;
+            --panel-2: #1b2030;
             --text: #e6eaf2;
             --muted: #9aa4b2;
             --gold: #d4af37;
-            --shadow: 0 10px 30px rgba(0,0,0,.35)
+            --accent: #8ef0cf;
+            --accent-2: #50c8ff;
+            --shadow: 0 18px 60px rgba(0,0,0,.35);
+            --ring: rgba(142,240,207,.25);
         }
 
         * {
@@ -23,84 +28,441 @@
 
         body {
             margin: 0;
-            background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
+            background: var(--bg);
             color: var(--text);
-            font: 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif
+            font: 16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+            overflow-x: hidden;
         }
 
-        header {
+            /* AURORA background */
+            body::before, body::after {
+                content: "";
+                position: fixed;
+                inset: -30% -10% auto -10%;
+                height: 70%;
+                filter: blur(60px);
+                opacity: .35;
+                z-index: -2;
+                border-radius: 50%;
+                background: radial-gradient(40% 60% at 20% 50%, #6ee7ff 0%, transparent 70%), radial-gradient(40% 60% at 80% 30%, #a78bfa 0%, transparent 70%), radial-gradient(30% 50% at 60% 90%, #22d3ee 0%, transparent 80%);
+                animation: float1 20s ease-in-out infinite alternate;
+            }
+
+            body::after {
+                inset: auto -5% -35% -5%;
+                height: 60%;
+                background: radial-gradient(40% 60% at 30% 20%, #f0abfc 0%, transparent 70%), radial-gradient(40% 60% at 70% 80%, #34d399 0%, transparent 75%);
+                animation: float2 24s ease-in-out infinite alternate;
+            }
+
+        @keyframes float1 {
+            to {
+                transform: translateY(40px) translateX(20px) rotate(2deg)
+            }
+        }
+
+        @keyframes float2 {
+            to {
+                transform: translateY(-30px) translateX(-10px) rotate(-2deg)
+            }
+        }
+
+        /* HEADER */
+        header.hero {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            padding: 20px 22px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            backdrop-filter: saturate(140%) blur(6px);
+            background: linear-gradient(180deg,rgba(8,10,16,.55),rgba(8,10,16,.25),rgba(8,10,16,0));
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 18px 22px;
-            border-bottom: 1px solid rgba(255,255,255,.06)
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
         }
 
         .logo {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             border-radius: 12px;
             display: grid;
             place-items: center;
             background: conic-gradient(from 180deg,var(--gold),#b8860b,var(--gold));
             color: #000;
             font-weight: 800;
-            box-shadow: 0 0 0 2px #12141a inset
+            box-shadow: 0 0 0 2px #12141a inset;
         }
 
-        h1 {
+        .hero-title {
             margin: 0;
-            font-size: 18px;
-            background: linear-gradient(135deg,var(--gold),#fff);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: .4px;
+            font-size: clamp(22px,3vw,34px);
+            background: linear-gradient(135deg,var(--gold),#ffffff);
             -webkit-background-clip: text;
             background-clip: text;
-            -webkit-text-fill-color: transparent
+            -webkit-text-fill-color: transparent;
         }
 
+        .toolbar {
+            display: flex;
+            gap: 10px
+        }
+
+        .btn {
+            appearance: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: var(--panel-2);
+            color: var(--text);
+            transition: transform .06s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px)
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg,var(--gold),#b8860b);
+                color: #000;
+                border-color: rgba(255,255,255,.08)
+            }
+
+            .btn.ghost {
+                background: rgba(255,255,255,.02)
+            }
+
+            .btn.shine::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                translate: -120% 0;
+                pointer-events: none;
+                background: linear-gradient(120deg,transparent 0%,rgba(255,255,255,.35) 50%,transparent 100%);
+                mix-blend-mode: screen;
+                transition: translate .6s ease;
+            }
+
+            .btn.shine:hover::after {
+                translate: 120% 0
+            }
+
+        /* LAYOUT */
         .wrap {
-            max-width: 1000px;
-            margin: 24px auto;
+            max-width: 1100px;
+            margin: 26px auto;
             padding: 0 16px
         }
 
+        .grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1.2fr .8fr
+        }
+
+        @media (max-width:980px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* CARD glass */
         .card {
-            background: var(--panel);
+            position: relative;
+            background: linear-gradient(180deg,rgba(22,26,38,.75),rgba(14,17,27,.75));
             border: 1px solid rgba(255,255,255,.08);
             border-radius: 18px;
             box-shadow: var(--shadow);
-            padding: 24px
+            overflow: hidden;
+        }
+
+            .card::before {
+                content: "";
+                position: absolute;
+                inset: -1px;
+                border-radius: inherit;
+                pointer-events: none;
+                background: radial-gradient(120% 60% at 0% 0%, rgba(142,240,207,.18), transparent 50%), radial-gradient(100% 60% at 100% 0%, rgba(80,200,255,.10), transparent 50%);
+                mask: linear-gradient(#000,transparent 60%);
+                opacity: .6;
+            }
+
+        .card-h {
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .card-c {
+            padding: 18px
         }
 
         .muted {
             color: var(--muted)
         }
 
-        ul {
-            margin: 10px 0 0 18px
+        h2 {
+            margin: 0;
+            font-size: 22px
+        }
+
+        /* FEATURES */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 12px
+        }
+
+        @media (max-width:640px) {
+            .features {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .feat {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px;
+            background: rgba(255,255,255,.03);
+            transition: transform .06s ease, border-color .2s ease, background .2s ease;
+        }
+
+            .feat:hover {
+                transform: translateY(-2px);
+                border-color: rgba(255,255,255,.18);
+                background: rgba(255,255,255,.05)
+            }
+
+        .ico {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            background: radial-gradient(120% 120% at 30% 30%, #eafff7 0%, #b8ffe7 30%, #8ef0cf 70%);
+            box-shadow: 0 0 0 0 var(--ring);
+            animation: ping 2.2s ease-out infinite;
+        }
+
+        @keyframes ping {
+            0% {
+                box-shadow: 0 0 0 0 var(--ring)
+            }
+
+            70% {
+                box-shadow: 0 0 0 14px rgba(142,240,207,0)
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(142,240,207,0)
+            }
+        }
+
+        .ico svg {
+            width: 18px;
+            height: 18px;
+            fill: #041014
+        }
+
+        /* CONTACT / INFO */
+        .stack {
+            display: grid;
+            gap: 18px
+        }
+
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px
+        }
+
+        .tag {
+            padding: 8px 10px;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 999px;
+            background: rgba(255,255,255,.03);
+            font-size: 14px
+        }
+
+        .map {
+            height: 240px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.02)), radial-gradient(80% 60% at 70% 40%, rgba(80,200,255,.18), transparent 60%), radial-gradient(80% 60% at 30% 70%, rgba(142,240,207,.18), transparent 60%), #0f131c;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+        }
+
+        footer {
+            padding: 28px 16px;
+            color: var(--muted);
+            text-align: center
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .link {
+            color: #b8c6ff
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">🦄</div>
-        <h1>Vanilla · Service Auto</h1>
+    <header class="hero">
+        <div class="brand">
+            <div class="logo">🛠️</div>
+            <h1 class="hero-title">Vanilla · Service Auto</h1>
+        </div>
+        <div class="toolbar">
+            <a class="btn ghost shine" href="./index.html">Acasă</a>
+            <a class="btn ghost shine" href="./vanilla.html">Rezervări</a>
+            <a class="btn primary shine" href="tel:07xxxxxxxx">Sună acum</a>
+        </div>
     </header>
 
     <main class="wrap">
-        <article class="card">
-            <h2>Întreținere & reparații</h2>
-            <p class="muted">Diagnoză, mecanică, frâne, distribuții, geometrie, AC, detailing.</p>
-            <ul>
-                <li>Diagnoză computerizată</li>
-                <li>Schimb ulei/filtre, frâne, distribuții</li>
-                <li>Suspensii & geometrie roți</li>
-                <li>Climatizare: încărcare & igienizare</li>
-                <li>Detailing: polish & protecție</li>
-            </ul>
-            <hr>
-            <p><strong>Program:</strong> L–V 9:00–18:00 • <strong>Tel:</strong> 07xx xxx xxx • <strong>Email:</strong> service@vanilla.ro</p>
-            <p><a href="/index.html" class="muted">← Înapoi la acasă</a></p>
-        </article>
+        <div class="grid">
+            <!-- LEFT: Services -->
+            <section class="card">
+                <div class="card-h">
+                    <h2>Întreținere & reparații</h2>
+                    <span class="muted">Diagnoză, mecanică, frâne, distribuții, geometrie, AC, detailing</span>
+                </div>
+                <div class="card-c">
+                    <div class="features">
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- wrench -->
+                                <svg viewBox="0 0 24 24"><path d="M22 19l-6.6-6.6a5 5 0 01-6.8-6.8L10 5l3 3 1.4-1.4-3-3  .4-.4A5 5 0 0117.4 8.6L24 15l-2 2-2-2-2 2 2 2-2 2-2-2-2 2 2 2-2 2-3-3L5 22l-3-3 3-3-2-2 2-2 2 2 2-2-2-2 2-2 3 3" /></svg>
+                            </div>
+                            <div>
+                                <strong>Mecanică generală</strong>
+                                <div class="muted">Ulei/filtre, frâne, distribuții, ambreiaj.</div>
+                            </div>
+                        </div>
+
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- chip/obd -->
+                                <svg viewBox="0 0 24 24"><path d="M3 7h18v10H3zM5 9v6h2V9H5zm4 0v6h2V9H9zm4 0v6h2V9h-2zm4 0v6h2V9h-2z" /></svg>
+                            </div>
+                            <div>
+                                <strong>Diagnoză computerizată</strong>
+                                <div class="muted">Citire erori, live data, programări module.</div>
+                            </div>
+                        </div>
+
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- alignment -->
+                                <svg viewBox="0 0 24 24"><path d="M4 7h16v2H4zM4 11h10v2H4zM4 15h16v2H4z" /></svg>
+                            </div>
+                            <div>
+                                <strong>Geometrie & suspensii</strong>
+                                <div class="muted">Verificare, reglaje, brațe, amortizoare.</div>
+                            </div>
+                        </div>
+
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- snowflake/ac -->
+                                <svg viewBox="0 0 24 24"><path d="M12 2v20M4 6l16 12M20 6L4 18M2 12h20" /></svg>
+                            </div>
+                            <div>
+                                <strong>Climatizare</strong>
+                                <div class="muted">Încărcare freon, igienizare/ozonizare.</div>
+                            </div>
+                        </div>
+
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- spray/detail -->
+                                <svg viewBox="0 0 24 24"><path d="M7 7h6l4 4v8a2 2 0 01-2 2H9a2 2 0 01-2-2V7zM13 3h4v2h-4z" /></svg>
+                            </div>
+                            <div>
+                                <strong>Detailing</strong>
+                                <div class="muted">Polish, protecție ceramică, curățare interior.</div>
+                            </div>
+                        </div>
+
+                        <div class="feat">
+                            <div class="ico">
+                                <!-- battery -->
+                                <svg viewBox="0 0 24 24"><path d="M20 7h-2V5h-2v2H8V5H6v2H4a2 2 0 00-2 2v8a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" /></svg>
+                            </div>
+                            <div>
+                                <strong>Electrică</strong>
+                                <div class="muted">Baterii, alternator, pornire, senzori.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row" style="margin-top:14px">
+                        <span class="tag">Piese OEM & Aftermarket</span>
+                        <span class="tag">Garanție lucrare</span>
+                        <span class="tag">Program flexibil</span>
+                    </div>
+
+                    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+                        <a class="btn primary shine" href="tel:07xxxxxxxx">Programează o vizită</a>
+                        <a class="btn ghost shine" href="mailto:service@vanilla.ro">service@vanilla.ro</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT: Contact / Program / Locație -->
+            <aside class="stack">
+                <section class="card">
+                    <div class="card-h"><h2>Contact rapid</h2></div>
+                    <div class="card-c">
+                        <p><strong>Telefon:</strong> <a class="link" href="tel:07xxxxxxxx">07xx xxx xxx</a></p>
+                        <p><strong>Email:</strong> <a class="link" href="mailto:service@vanilla.ro">service@vanilla.ro</a></p>
+                        <p><strong>Adresă:</strong> Str. Exemplu 123, Oraș</p>
+                        <div class="info-row">
+                            <span class="tag">Luni–Vineri 09:00–18:00</span>
+                            <span class="tag">Sâmbătă 10:00–14:00</span>
+                        </div>
+                        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+                            <a class="btn ghost shine" href="./index.html">← Înapoi la acasă</a>
+                            <a class="btn ghost shine" href="./vanilla.html">Vezi Rezervări</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-h"><h2>Locație</h2></div>
+                    <div class="card-c">
+                        <div class="map">Hartă / foto locație (placeholder)</div>
+                        <p class="muted" style="margin-top:8px">La 2 minute de centru. Parcare în fața service-ului.</p>
+                    </div>
+                </section>
+            </aside>
+        </div>
     </main>
+
+    <footer>© Vanilla Service • Toate drepturile rezervate</footer>
 </body>
 </html>
