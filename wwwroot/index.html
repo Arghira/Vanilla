@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Vanilla · Acasă</title>
+
     <style>
         :root {
             --bg: #0b0e15;
@@ -14,8 +15,6 @@
             --gold: #d4af37;
             --shadow: 0 18px 60px rgba(0,0,0,.35);
             --ring: rgba(212,175,55,.18);
-            --accent: #8ef0cf;
-            --accent2: #50c8ff;
         }
 
         * {
@@ -34,7 +33,7 @@
             overflow-x: hidden;
         }
 
-            /* AURORA BACKGROUND */
+            /* aurora background */
             body::before, body::after {
                 content: "";
                 position: fixed;
@@ -103,10 +102,10 @@
             display: grid;
             gap: 20px;
             grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-            perspective: 1000px;
+            perspective: 1000px
         }
 
-        /* CARD (glass + glow) */
+        /* CARD generic (glass + glow) */
         .card {
             position: relative;
             display: block;
@@ -139,7 +138,7 @@
                 border-color: rgba(255,255,255,.18);
                 box-shadow: 0 20px 50px rgba(0,0,0,.45), 0 0 0 6px rgba(212,175,55,.06);
             }
-            /* shine sweep */
+
             .card .shine {
                 position: absolute;
                 inset: 0;
@@ -162,10 +161,10 @@
             border-radius: 12px;
             margin-bottom: 14px;
             background: radial-gradient(120% 120% at 30% 30%, #fffbea 0%, #ffe9a6 35%, #d4af37 75%);
-            box-shadow: 0 0 0 0 var(--ring);
-            animation: ring 2.4s ease-out infinite;
             color: #1b1200;
             font-weight: 900;
+            box-shadow: 0 0 0 0 rgba(212,175,55,.18);
+            animation: ring 2.4s ease-out infinite;
         }
 
         @keyframes ring {
@@ -205,6 +204,31 @@
             transform: translateZ(20px);
         }
 
+        /* ===== VANILLA: fundal foto pe card ===== */
+        .card.card--vanilla::before {
+            /* override peste .card::before — e ultima, deci câștigă */
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url("/dance1.png") center/cover no-repeat;
+            filter: saturate(1.1) brightness(.75);
+            transform: scale(1.03);
+            z-index: 0;
+        }
+
+        .card.card--vanilla::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,0,0,.25), transparent);
+            z-index: 0;
+        }
+
+        .card.card--vanilla > * {
+            position: relative;
+            z-index: 1;
+        }
+
         /* reduced motion */
         @media (prefers-reduced-motion:reduce) {
             .card, .card .shine, body::before, body::after {
@@ -218,6 +242,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="hero" aria-label="Titlu principal">
         <h1 class="hero-title">Road Saints Family</h1>
@@ -226,7 +251,7 @@
     <main class="wrap">
         <div class="grid" role="list">
             <!-- VANILLA -->
-            <a class="card" href="./vanilla.html" role="listitem" aria-label="Vanilla Club – Rezervări">
+            <a class="card card--vanilla" href="./vanilla.html" role="listitem" aria-label="Vanilla Club — Rezervări">
                 <span class="shine" aria-hidden="true"></span>
                 <div class="badge" aria-hidden="true">🍸</div>
                 <h2 class="title">Vanilla Club – Rezervări</h2>
