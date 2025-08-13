@@ -15,8 +15,8 @@
             --accent-2: #50c8ff;
             --danger: #ff6b6b;
             --warning: #ffd166;
-            --shadow: 0 10px 30px rgba(0,0,0,.35);
             --gold: #d4af37;
+            --shadow: 0 10px 30px rgba(0,0,0,.35);
         }
 
         * {
@@ -29,9 +29,9 @@
 
         body {
             margin: 0;
-            background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
             color: var(--text);
-            font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+            background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
+            font: 14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
         }
 
         header {
@@ -40,12 +40,12 @@
             justify-content: space-between;
             gap: 16px;
             padding: 18px 22px;
-            background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+            background: linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));
             border-bottom: 1px solid rgba(255,255,255,.06);
             position: sticky;
             top: 0;
             z-index: 30;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px)
         }
 
         .brand {
@@ -58,25 +58,90 @@
                 width: 48px;
                 height: 48px;
                 border-radius: 12px;
-                background: linear-gradient(135deg, var(--gold), #b8860b);
-                box-shadow: 0 0 0 2px #12141a inset;
+                background: conic-gradient(from 180deg at 50% 50%, var(--gold), #b8860b, var(--gold));
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 24px;
-                font-weight: bold;
+                font-weight: 700;
                 color: #000;
+                box-shadow: 0 0 0 2px #12141a inset;
             }
 
             .brand h1 {
                 margin: 0;
                 font-size: 18px;
                 letter-spacing: .3px;
-                background: linear-gradient(135deg, var(--gold), #fff);
+                background: linear-gradient(135deg,var(--gold),#fff);
                 -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
                 background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            appearance: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: var(--panel-2);
+            color: var(--text);
+            transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+            .btn:focus-visible {
+                outline: 2px solid color-mix(in srgb, var(--accent) 60%, #fff);
+                outline-offset: 2px;
+                box-shadow: 0 0 0 6px rgba(142,240,207,.15)
+            }
+
+            .btn:hover {
+                transform: translateY(-1px)
+            }
+
+            .btn.ghost {
+                background: transparent;
+                border-style: dashed;
+                border-color: rgba(255,255,255,.25)
+            }
+
+            .btn.primary {
+                background: linear-gradient(135deg,var(--gold),#b8860b);
+                color: #000;
+                border-color: rgba(255,255,255,.08)
+            }
+
+            .btn[aria-busy="true"] {
+                position: relative;
+                pointer-events: none;
+                opacity: .85
+            }
+
+                .btn[aria-busy="true"]::after {
+                    content: "";
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    width: 16px;
+                    height: 16px;
+                    margin-top: -8px;
+                    border: 2px solid #000;
+                    border-right-color: transparent;
+                    border-radius: 50%;
+                    animation: spin .8s linear infinite
+                }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
 
         .layout {
             max-width: 1400px;
@@ -84,33 +149,34 @@
             padding: 0 16px;
             display: grid;
             gap: 16px;
-            grid-template-columns: 320px 1fr
+            grid-template-columns: 340px 1fr;
         }
 
-        @media (max-width: 980px) {
+        @media (max-width:980px) {
             .layout {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr
             }
         }
 
         .card {
             background: var(--panel);
             border: 1px solid rgba(255,255,255,.06);
-            border-radius: 16px;
+            border-radius: 18px;
             box-shadow: var(--shadow)
         }
 
-            .card .card-h {
-                padding: 14px 16px;
-                border-bottom: 1px solid rgba(255,255,255,.06);
-                display: flex;
-                align-items: center;
-                justify-content: space-between
-            }
+        .card-h {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px
+        }
 
-            .card .card-c {
-                padding: 16px
-            }
+        .card-c {
+            padding: 16px
+        }
 
         .controls .row {
             display: flex;
@@ -125,7 +191,7 @@
             color: var(--muted)
         }
 
-        .controls input, .controls select, .controls button {
+        .controls input, .controls select {
             width: 100%;
             padding: 10px 12px;
             border-radius: 12px;
@@ -133,22 +199,6 @@
             background: var(--panel-2);
             color: var(--text)
         }
-
-        .controls button {
-            cursor: pointer;
-            transition: transform .05s ease;
-            font-weight: 600
-        }
-
-        .controls .primary {
-            background: linear-gradient(135deg, var(--gold), #b8860b);
-            border-color: rgba(255,255,255,.08);
-            color: #000;
-        }
-
-            .controls .primary:hover {
-                transform: translateY(-1px)
-            }
 
         .legend {
             display: flex;
@@ -199,7 +249,7 @@
                 opacity: 1;
                 user-select: none;
                 pointer-events: none;
-                background: #1a1a1a;
+                background: #1a1a1a
             }
 
         .tables {
@@ -212,39 +262,105 @@
             position: absolute;
             width: var(--size);
             height: var(--size);
-            transform: translate(-50%, -50%);
+            transform: translate(-50%,-50%);
             border-radius: 50%;
             display: grid;
             place-items: center;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 14px;
             color: #0f131a;
             cursor: pointer;
             user-select: none;
+            border: 2px solid rgba(255,255,255,.25);
             filter: drop-shadow(0 3px 8px rgba(0,0,0,.7));
-            transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease;
-            border: 2px solid rgba(255,255,255,0.3);
+            transition: transform .12s ease, filter .12s ease, opacity .2s ease, box-shadow .2s ease;
         }
 
-            .marker.free {
-                background: var(--accent);
-                box-shadow: 0 0 15px rgba(142, 240, 207, 0.4);
-            }
-
-            .marker.busy {
-                background: var(--danger);
-                color: #0b0f14;
-                box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+            .marker:focus-visible {
+                outline: 3px solid color-mix(in srgb, var(--accent-2) 70%, #fff);
+                outline-offset: 2px
             }
 
             .marker:hover {
-                transform: translate(-50%, -50%) scale(1.15);
-                z-index: 10;
+                transform: translate(-50%,-50%) scale(1.15);
+                z-index: 10
             }
 
-            .marker[data-edit="true"] {
-                outline: 2px dashed rgba(255,255,255,.5);
-                outline-offset: 4px;
+            .marker.free {
+                background: var(--accent);
+                box-shadow: 0 0 0 0 rgba(142,240,207,.45);
+                animation: glow 2s ease-out infinite
+            }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(142,240,207,.45)
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(142,240,207,0)
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(142,240,207,0)
+            }
+        }
+
+        .marker.busy {
+            background: var(--danger);
+            color: #0b0f14;
+            box-shadow: 0 0 15px rgba(255,107,107,.35)
+        }
+
+        .marker[data-edit="true"] {
+            outline: 2px dashed rgba(255,255,255,.5);
+            outline-offset: 4px;
+            cursor: move
+        }
+
+        .tooltip {
+            position: relative
+        }
+
+            .tooltip::after {
+                content: attr(data-tip);
+                position: absolute;
+                left: 50%;
+                bottom: calc(100% + 10px);
+                transform: translateX(-50%);
+                white-space: nowrap;
+                pointer-events: none;
+                padding: 6px 8px;
+                border-radius: 8px;
+                font-size: 12px;
+                background: rgba(20,24,32,.95);
+                color: var(--text);
+                border: 1px solid rgba(255,255,255,.08);
+                opacity: 0;
+                translate: 0 4px;
+                transition: opacity .15s ease, translate .15s ease;
+            }
+
+            .tooltip:hover::after {
+                opacity: 1;
+                translate: 0 0
+            }
+
+            .tooltip::before {
+                content: "";
+                position: absolute;
+                left: 50%;
+                bottom: 100%;
+                transform: translate(-50%,6px);
+                border: 6px solid transparent;
+                border-top-color: rgba(20,24,32,.95);
+                opacity: 0;
+                transition: .15s ease;
+            }
+
+            .tooltip:hover::before {
+                opacity: 1;
+                transform: translate(-50%,0)
             }
 
         .toast {
@@ -267,7 +383,7 @@
             padding: 0;
             background: var(--panel);
             color: var(--text);
-            width: min(560px, 92vw)
+            width: min(560px,92vw)
         }
 
             dialog::backdrop {
@@ -280,7 +396,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(184, 134, 11, 0.1));
+            background: linear-gradient(135deg, rgba(212,175,55,.12), rgba(184,134,11,.08))
         }
 
         .modal-c {
@@ -309,7 +425,7 @@
             gap: 12px
         }
 
-        @media(max-width:560px) {
+        @media (max-width:560px) {
             .grid {
                 grid-template-columns: 1fr
             }
@@ -331,20 +447,124 @@
             color: var(--text)
         }
 
-        .toolbar {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap
-        }
-
-        .ghost {
-            background: transparent;
-            border: 1px dashed rgba(255,255,255,.25)
-        }
-
         .subtext {
             color: var(--muted);
             font-size: 12px
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .marker, .btn {
+                transition: none
+            }
+
+                .marker:hover {
+                    transform: translate(-50%,-50%)
+                }
+
+                .marker.free {
+                    animation: none
+                }
+        }
+
+        /* ====== TIME PICKER (floating) ====== */
+        .timepicker {
+            position: relative
+        }
+
+            .timepicker .inputlike {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid rgba(255,255,255,.08);
+                background: var(--panel-2);
+                color: var(--text);
+                cursor: pointer;
+            }
+
+            .timepicker .caret {
+                width: 0;
+                height: 0;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid rgba(255,255,255,.6)
+            }
+
+        .timepanel {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0; /* se setează din JS */
+            width: 220px;
+            max-height: 320px;
+            display: none;
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 8px;
+        }
+
+            .timepanel.open {
+                display: block
+            }
+
+            .timepanel .grid {
+                display: grid;
+                gap: 6px;
+                grid-template-columns: repeat(2,1fr);
+                max-height: 260px;
+                overflow: auto;
+                padding: 4px;
+            }
+
+        .timeopt {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            background: var(--panel-2);
+            color: var(--text);
+            font-weight: 600;
+            transition: background .15s ease, transform .06s ease;
+        }
+
+            .timeopt:hover {
+                background: #20283a;
+                transform: translateY(-1px)
+            }
+
+            .timeopt[aria-selected="true"] {
+                outline: 2px solid color-mix(in srgb, var(--accent-2) 70%, #fff)
+            }
+
+        .timepanel .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px 8px;
+            gap: 8px
+        }
+
+        .timepanel .search {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: var(--panel-2);
+            color: var(--text);
+        }
+
+        .kbd {
+            font-size: 11px;
+            padding: 2px 6px;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 6px;
+            color: var(--muted)
         }
     </style>
 </head>
@@ -355,8 +575,8 @@
             <h1>Vanilla Unicorn · Rezervări</h1>
         </div>
         <div class="toolbar">
-            <button id="editToggle" class="ghost">Editare amplasare mese</button>
-            <button id="exportLayout" class="ghost">Export layout</button>
+            <button id="editToggle" class="btn ghost" aria-pressed="false">Editare amplasare mese</button>
+            <button id="exportLayout" class="btn ghost">Export layout</button>
         </div>
     </header>
 
@@ -364,6 +584,7 @@
         <section class="card controls" aria-label="Filtre și acțiuni">
             <div class="card-h">
                 <strong>Selectează intervalul</strong>
+                <small id="availabilityMeta" class="subtext" aria-live="polite"></small>
             </div>
             <div class="card-c">
                 <div class="row">
@@ -371,21 +592,39 @@
                         <label for="date">Data</label>
                         <input id="date" type="date" />
                     </div>
-                    <div style="width:130px">
+
+                    <!-- TIME PICKER -->
+                    <div style="width:170px">
                         <label for="time">Ora</label>
-                        <input id="time" type="time" step="3600" />
+                        <div class="timepicker" id="timepicker">
+                            <button type="button" class="inputlike" id="timeBtn" aria-haspopup="listbox" aria-expanded="false">
+                                <span id="timeLabel">--:--</span>
+                                <span class="caret" aria-hidden="true"></span>
+                            </button>
+                            <!-- panelul se mută în body; aici doar îl definim -->
+                            <div class="timepanel" id="timePanel">
+                                <div class="header">
+                                    <input class="search" id="timeSearch" placeholder="Caută (ex. 21:30)" aria-label="Caută ora" />
+                                    <span class="kbd">Esc</span>
+                                </div>
+                                <div class="grid" id="timeGrid" role="listbox" aria-label="Alege ora"></div>
+                            </div>
+                            <!-- valoarea reală -->
+                            <input id="time" type="hidden" />
+                        </div>
                     </div>
+
                     <div style="width:150px">
                         <label for="duration">Durata</label>
                         <select id="duration">
                             <option value="60">60 min</option>
                             <option value="90">90 min</option>
-                            <option value="120">120 min</option>
+                            <option value="120" selected>120 min</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
-                    <button id="check" class="primary">Verifică disponibilitatea</button>
+                    <button id="check" class="btn primary">Verifică disponibilitatea</button>
                 </div>
                 <div class="legend">
                     <span class="pill"><span class="dot free"></span> Liber</span>
@@ -398,7 +637,7 @@
         <section class="card">
             <div class="card-h">
                 <strong>Plan Vanilla Unicorn</strong>
-                <small class="subtext">Club Layout cu 11 mese disponibile pentru rezervări</small>
+                <small class="subtext">Club Layout cu 11 mese</small>
             </div>
             <div id="stage" class="card-c stage">
                 <img id="backdrop" class="backdrop" alt="Plan Vanilla Unicorn" />
@@ -434,9 +673,9 @@
                     <div>
                         <label for="mDuration">Durata</label>
                         <select id="mDuration">
-                            <option value="60" selected>60 min</option>
+                            <option value="60">60 min</option>
                             <option value="90">90 min</option>
-                            <option value="120">120 min</option>
+                            <option value="120" selected>120 min</option>
                         </select>
                     </div>
                     <div style="grid-column:1/-1">
@@ -446,193 +685,236 @@
                 </div>
             </div>
             <div class="modal-f">
-                <button type="button" class="ghost" id="cancelBtn">Anulează</button>
-                <button id="saveBtn" class="primary" value="default">Confirmă rezervarea</button>
+                <button type="button" class="btn ghost" id="cancelBtn">Anulează</button>
+                <button id="saveBtn" class="btn primary" value="default">Confirmă rezervarea</button>
             </div>
         </form>
     </dialog>
 
     <script>
-        // ===================== CONFIG =====================
+        // ===================== CONFIG BACKDROP =====================
         const API_BASE = window.location.origin;
 
-        // Exact positions matching your Vanilla Unicorn floor plan image
         let layout = JSON.parse(localStorage.getItem('vanillaUnicornLayout') || 'null') || [
-            { id: 1, left: 58.5, top: 23 },   // Upper right circular area
-            { id: 2, left: 44, top: 34 },     // Left side middle
-            { id: 3, left: 69, top: 28 },     // Right side upper
-            { id: 4, left: 65, top: 39 },     // Right side middle
-            { id: 5, left: 83, top: 39 },     // Far right middle
-            { id: 6, left: 35, top: 48 },     // Left corridor
-            { id: 7, left: 65, top: 48 },     // Right corridor
-            { id: 8, left: 83, top: 48 },     // Far right lower
-            { id: 9, left: 45, top: 66 },     // Lower left booth
-            { id: 10, left: 67, top: 66 },    // Lower right booth
-            { id: 11, left: 20, top: 69 }     // Far left private area
+            { id: 1, left: 58.5, top: 23 },
+            { id: 2, left: 44, top: 34 },
+            { id: 3, left: 69, top: 28 },
+            { id: 4, left: 65, top: 39 },
+            { id: 5, left: 83, top: 39 },
+            { id: 6, left: 35, top: 48 },
+            { id: 7, left: 65, top: 48 },
+            { id: 8, left: 83, top: 48 },
+            { id: 9, left: 45, top: 66 },
+            { id: 10, left: 67, top: 66 },
+            { id: 11, left: 20, top: 69 }
         ];
 
-        const TABLES = layout.map(p => p.id);
-
-        // Create a proper Vanilla Unicorn floor plan matching your image
         const backdrop = document.getElementById('backdrop');
-
-        function createVanillaUnicornPlan() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 1000;
-            canvas.height = 650;
+        function createPlan() {
+            const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 650;
             const ctx = canvas.getContext('2d');
-
-            // Base background - dark gray
-            ctx.fillStyle = '#2d2d2d';
-            ctx.fillRect(0, 0, 1000, 650);
-
-            // Main building outline
-            ctx.fillStyle = '#3a3a3a';
-            ctx.beginPath();
-            // Complex building shape matching your image
-            ctx.moveTo(50, 150);
-            ctx.lineTo(400, 150);
-            ctx.lineTo(400, 50);
-            ctx.lineTo(600, 50);
-            ctx.lineTo(600, 150);
-            ctx.lineTo(850, 150);
-            ctx.lineTo(850, 300);
-            ctx.lineTo(950, 300);
-            ctx.lineTo(950, 550);
-            ctx.lineTo(750, 550);
-            ctx.lineTo(750, 500);
-            ctx.lineTo(250, 500);
-            ctx.lineTo(250, 600);
-            ctx.lineTo(50, 600);
-            ctx.closePath();
-            ctx.fill();
-
-            // Interior walls
-            ctx.strokeStyle = '#1a1a1a';
-            ctx.lineWidth = 3;
-
-            // Main interior divisions
-            ctx.beginPath();
-            // Vertical divisions
-            ctx.moveTo(400, 150);
-            ctx.lineTo(400, 350);
-            ctx.moveTo(600, 150);
-            ctx.lineTo(600, 350);
-            // Horizontal divisions
-            ctx.moveTo(250, 350);
-            ctx.lineTo(750, 350);
-            ctx.moveTo(250, 450);
-            ctx.lineTo(650, 450);
-            ctx.stroke();
-
-            // Stage area (upper center)
-            ctx.fillStyle = '#4a4a5a';
-            ctx.fillRect(450, 80, 100, 60);
-            ctx.strokeStyle = '#6a6a7a';
-            ctx.strokeRect(450, 80, 100, 60);
-
-            // Bar area (right side)
-            ctx.fillStyle = '#5a4a4a';
-            ctx.fillRect(780, 200, 60, 100);
-            ctx.strokeStyle = '#7a6a6a';
-            ctx.strokeRect(780, 200, 60, 100);
-
-            // VIP booths (bottom area)
+            ctx.fillStyle = '#2d2d2d'; ctx.fillRect(0, 0, 1000, 650);
+            ctx.fillStyle = '#3a3a3a'; ctx.beginPath();
+            ctx.moveTo(50, 150); ctx.lineTo(400, 150); ctx.lineTo(400, 50); ctx.lineTo(600, 50);
+            ctx.lineTo(600, 150); ctx.lineTo(850, 150); ctx.lineTo(850, 300); ctx.lineTo(950, 300);
+            ctx.lineTo(950, 550); ctx.lineTo(750, 550); ctx.lineTo(750, 500); ctx.lineTo(250, 500);
+            ctx.lineTo(250, 600); ctx.lineTo(50, 600); ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(400, 150); ctx.lineTo(400, 350);
+            ctx.moveTo(600, 150); ctx.lineTo(600, 350);
+            ctx.moveTo(250, 350); ctx.lineTo(750, 350);
+            ctx.moveTo(250, 450); ctx.lineTo(650, 450); ctx.stroke();
+            ctx.fillStyle = '#4a4a5a'; ctx.fillRect(450, 80, 100, 60);
+            ctx.strokeStyle = '#6a6a7a'; ctx.strokeRect(450, 80, 100, 60);
+            ctx.fillStyle = '#5a4a4a'; ctx.fillRect(780, 200, 60, 100);
+            ctx.strokeStyle = '#7a6a6a'; ctx.strokeRect(780, 200, 60, 100);
             ctx.fillStyle = '#4a5a4a';
-            for (let i = 0; i < 3; i++) {
-                ctx.fillRect(300 + i * 120, 470, 80, 80);
-                ctx.strokeStyle = '#6a7a6a';
-                ctx.strokeRect(300 + i * 120, 470, 80, 80);
-            }
-
-            // Add some decorative elements
+            for (let i = 0; i < 3; i++) { ctx.fillRect(300 + i * 120, 470, 80, 80); ctx.strokeStyle = '#6a7a6a'; ctx.strokeRect(300 + i * 120, 470, 80, 80); }
             ctx.fillStyle = '#555';
-            // Small decorative circles
-            for (let i = 0; i < 8; i++) {
-                ctx.beginPath();
-                ctx.arc(200 + i * 80, 250, 8, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // Pillars
-            ctx.fillStyle = '#444';
-            ctx.fillRect(300, 200, 15, 15);
-            ctx.fillRect(500, 200, 15, 15);
-            ctx.fillRect(700, 200, 15, 15);
-
+            for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(200 + i * 80, 250, 8, 0, Math.PI * 2); ctx.fill(); }
+            ctx.fillStyle = '#444'; ctx.fillRect(300, 200, 15, 15); ctx.fillRect(500, 200, 15, 15); ctx.fillRect(700, 200, 15, 15);
             return canvas.toDataURL();
         }
+        backdrop.src = createPlan();
 
-        backdrop.src = createVanillaUnicornPlan();
+        // ===================== TIME PICKER (floating portal) =====================
+        const picker = document.getElementById('timepicker');
+        const timeBtn = document.getElementById('timeBtn');
+        const timeLabel = document.getElementById('timeLabel');
+        const timeInput = document.getElementById('time'); // hidden HH:mm
+        const timePanel = document.getElementById('timePanel');
+        const timeGrid = document.getElementById('timeGrid');
+        const timeSearch = document.getElementById('timeSearch');
 
-        // ===================== UI INITIAL =====================
+        // Mutăm panelul în body ca să nu fie tăiat de containere
+        document.body.appendChild(timePanel);
+
+        // liste pe 30 min, 12:00 -> 04:00
+        const timeOptions = (() => {
+            const opts = [];
+            let d = new Date(); d.setHours(12, 0, 0, 0);
+            const end = new Date(d); end.setHours(28, 0, 0, 0); // 04:00 next day
+            while (d <= end) { opts.push(d.toTimeString().slice(0, 5)); d = new Date(d.getTime() + 30 * 60000); }
+            return opts;
+        })();
+
+        function renderTimeOptions(filter = "") {
+            const f = filter.trim().toLowerCase();
+            timeGrid.innerHTML = "";
+            const list = timeOptions.filter(t => t.includes(f));
+            for (const t of list) {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'timeopt'; b.textContent = t; b.role = 'option';
+                b.setAttribute('aria-selected', t === timeInput.value ? 'true' : 'false');
+                b.addEventListener('click', () => selectTime(t, true));
+                b.addEventListener('mouseenter', () => b.focus({ preventScroll: true }));
+                timeGrid.appendChild(b);
+            }
+            // auto-scroll la selecția curentă
+            setTimeout(() => {
+                const sel = timeGrid.querySelector('.timeopt[aria-selected="true"]');
+                sel?.scrollIntoView({ block: 'nearest' });
+            }, 0);
+        }
+
+        function placePanel() {
+            const r = timeBtn.getBoundingClientRect();
+            const margin = 6;
+            const width = Math.max(220, r.width); // cel puțin 220px
+            timePanel.style.width = width + 'px';
+            timePanel.style.left = Math.min(r.left, window.innerWidth - width - 8) + 'px';
+            // mai întâi punem sub buton…
+            timePanel.style.top = (r.bottom + margin) + 'px';
+            timePanel.classList.add('open');
+            // …apoi dacă iese din ecran, îl ridicăm deasupra
+            const pr = timePanel.getBoundingClientRect();
+            if (pr.bottom > window.innerHeight) {
+                timePanel.style.top = (r.top - pr.height - margin) + 'px';
+            }
+        }
+
+        function openTimePanel() {
+            renderTimeOptions();
+            placePanel();
+            timeBtn.setAttribute('aria-expanded', 'true');
+            timeSearch.value = ""; setTimeout(() => timeSearch.focus(), 10);
+            window.addEventListener('scroll', closeTimePanel, { once: true });
+            window.addEventListener('resize', closeTimePanel, { once: true });
+            document.addEventListener('mousedown', onClickOutside);
+            document.addEventListener('keydown', onTimeKey);
+        }
+        function closeTimePanel() {
+            timePanel.classList.remove('open');
+            timeBtn.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('mousedown', onClickOutside);
+            document.removeEventListener('keydown', onTimeKey);
+        }
+        function onClickOutside(e) {
+            if (!timePanel.contains(e.target) && e.target !== timeBtn) closeTimePanel();
+        }
+        function onTimeKey(e) {
+            if (e.key === 'Escape') { closeTimePanel(); timeBtn.focus(); }
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const focusable = [...timeGrid.querySelectorAll('.timeopt')];
+                if (!focusable.length) return;
+                const idx = focusable.findIndex(x => x === document.activeElement);
+                const next = e.key === 'ArrowDown' ? Math.min(idx + 1, focusable.length - 1)
+                    : Math.max(idx - 1, 0);
+                (focusable[next] || focusable[0]).focus();
+            }
+            if (e.key === 'Enter' && document.activeElement?.classList.contains('timeopt')) {
+                document.activeElement.click();
+            }
+        }
+        function selectTime(t, announce) {
+            timeInput.value = t;
+            timeLabel.textContent = t;
+            closeTimePanel();
+            if (announce) { refreshStatus(); }
+        }
+        timeBtn.addEventListener('click', () => {
+            if (timePanel.classList.contains('open')) closeTimePanel(); else openTimePanel();
+        });
+        timeSearch.addEventListener('input', (e) => renderTimeOptions(e.target.value));
+
+        // ===================== ELEMENTS & DEFAULTS =====================
         const elDate = document.getElementById('date');
-        const elTime = document.getElementById('time');
         const elDur = document.getElementById('duration');
         const btnCheck = document.getElementById('check');
         const tablesEl = document.getElementById('tables');
         const toast = document.getElementById('toast');
+        const availabilityMeta = document.getElementById('availabilityMeta');
 
-        // Set default date/time
-        const now = new Date();
-        now.setMinutes(0, 0, 0);
-        now.setHours(now.getHours() + 1);
-        elDate.value = toInputDate(now);
-        elTime.value = toInputTime(now);
+        // default (rotunjit la 30min)
+        const dNow = new Date(); dNow.setMinutes(dNow.getMinutes() < 30 ? 30 : 60, 0, 0);
+        elDate.value = toInputDate(dNow);
+        const startDefault = nearestExisting(dNow);
+        timeInput.value = startDefault; timeLabel.textContent = startDefault;
 
         btnCheck.addEventListener('click', refreshStatus);
         elDate.addEventListener('change', refreshStatus);
-        elTime.addEventListener('change', refreshStatus);
+
+        function nearestExisting(d) {
+            const hhmm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            if (timeOptions.includes(hhmm)) return hhmm;
+            return timeOptions[0];
+        }
 
         function buildMarkers() {
             tablesEl.innerHTML = '';
             for (const pos of layout) {
                 const m = document.createElement('button');
-                m.className = 'marker';
+                m.className = 'marker tooltip';
                 m.dataset.id = String(pos.id);
-                m.style.left = pos.left + '%';
-                m.style.top = pos.top + '%';
-                m.ariaLabel = `Masa ${pos.id}`;
+                m.style.left = pos.left + '%'; m.style.top = pos.top + '%';
+                m.setAttribute('aria-label', `Masa ${pos.id}`); m.setAttribute('tabindex', '0');
                 m.textContent = String(pos.id);
                 m.addEventListener('click', () => onMarkerClick(pos.id));
+                m.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); m.click(); } });
                 tablesEl.appendChild(m);
             }
         }
-
         buildMarkers();
 
         // ===================== STATUS & REZERVARE =====================
         async function refreshStatus() {
             const { iso, human } = currentSlotIso();
+            btnCheck.setAttribute('aria-busy', 'true');
             showToast('Se încarcă disponibilitatea…');
             try {
                 const r = await fetch(`${API_BASE}/status?startAt=${encodeURIComponent(iso)}`);
                 if (!r.ok) throw new Error('Eroare la citirea statusului.');
-                const data = await r.json();
+                const data = await r.json(); // [{tableId, isReserved}]
                 const map = new Map(data.map(x => [x.tableId, x.isReserved]));
+                let freeCount = 0;
                 for (const el of tablesEl.querySelectorAll('.marker')) {
                     const id = Number(el.dataset.id);
                     const busy = map.get(id) === true;
                     el.classList.toggle('busy', busy);
                     el.classList.toggle('free', !busy);
+                    if (!busy) freeCount++;
                     el.title = `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} — ${human}`;
+                    el.setAttribute('data-tip', `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} · ${human}`);
                 }
+                availabilityMeta.textContent = `${freeCount} ${freeCount === 1 ? 'masă liberă' : 'mese libere'} la ${human}`;
                 showToast('Disponibilitatea a fost actualizată.');
             } catch (err) {
                 console.error(err);
-                showToast('Nu am putut încărca statusul (verifică API_BASE și CORS).');
+                showToast('Nu am putut încărca statusul (verifică API și CORS).');
+            } finally {
+                btnCheck.removeAttribute('aria-busy');
             }
         }
 
         function currentSlotIso() {
-            const d = elDate.value; const t = elTime.value || '20:00';
+            const d = elDate.value; const t = timeInput.value || '20:00';
             const local = new Date(`${d}T${t}:00`);
             const iso = local.toISOString();
             const human = local.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
             return { iso, human, local };
         }
 
-        // MODAL REZERVARE
         const modal = document.getElementById('modal');
         const mTable = document.getElementById('mTable');
         const mWhen = document.getElementById('mWhen');
@@ -649,23 +931,14 @@
             const el = tablesEl.querySelector(`.marker[data-id="${id}"]`);
             if (el.classList.contains('busy')) { return; }
             const { iso, human } = currentSlotIso();
-            mTable.textContent = id;
-            mWhen.textContent = human;
-            mDuration.value = elDur.value;
-            mName.value = '';
-            mPhone.value = '';
-            mParty.value = '2';
-            mNote.value = '';
+            mTable.textContent = id; mWhen.textContent = human; mDuration.value = Number(document.getElementById('duration').value);
+            mName.value = ''; mPhone.value = ''; mParty.value = '2'; mNote.value = '';
             modal.showModal();
 
-            function cleanup() {
-                closeModal.removeEventListener('click', onClose);
-                cancelBtn.removeEventListener('click', onClose);
-                saveBtn.removeEventListener('click', onSave);
-            }
+            function cleanup() { closeModal.removeEventListener('click', onClose); cancelBtn.removeEventListener('click', onClose); saveBtn.removeEventListener('click', onSave); }
             function onClose() { modal.close(); cleanup(); }
             async function onSave(ev) {
-                ev.preventDefault(); saveBtn.disabled = true; saveBtn.textContent = 'Se salvează…';
+                ev.preventDefault(); saveBtn.setAttribute('aria-busy', 'true');
                 try {
                     const payload = {
                         tableId: Number(id),
@@ -676,21 +949,15 @@
                         partySize: mParty.value ? Number(mParty.value) : null,
                         note: mNote.value.trim() || null
                     };
-                    const r = await fetch(`${API_BASE}/reservations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (r.status === 201) {
-                        showToast('Rezervare creată cu succes!');
-                        modal.close(); refreshStatus();
-                    } else if (r.status === 409) {
-                        showToast('Ups, masa tocmai a fost rezervată. Încearcă altă masă sau oră.');
-                    } else {
-                        const txt = await r.text();
-                        showToast('Eroare la salvare: ' + (txt || r.status));
-                    }
-                } catch (err) {
-                    console.error(err); showToast('Eroare rețea către API.');
-                } finally { saveBtn.disabled = false; saveBtn.textContent = 'Confirmă rezervarea'; cleanup(); }
+                    const r = await fetch(`${API_BASE}/reservations`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                    });
+                    if (r.status === 201) { showToast('Rezervare creată cu succes!'); modal.close(); refreshStatus(); }
+                    else if (r.status === 409) { showToast('Ups, masa tocmai a fost rezervată. Încearcă altă masă sau oră.'); }
+                    else { const txt = await r.text(); showToast('Eroare la salvare: ' + (txt || r.status)); }
+                } catch (err) { console.error(err); showToast('Eroare rețea către API.'); }
+                finally { saveBtn.removeAttribute('aria-busy'); cleanup(); }
             }
-
             closeModal.addEventListener('click', onClose);
             cancelBtn.addEventListener('click', onClose);
             saveBtn.addEventListener('click', onSave);
@@ -699,22 +966,24 @@
         // ===================== EDIT MODE =====================
         const editToggle = document.getElementById('editToggle');
         const exportLayout = document.getElementById('exportLayout');
-        let editMode = false; let dragEl = null;
+        let editMode = false, dragEl = null;
 
         editToggle.addEventListener('click', () => {
             editMode = !editMode;
             editToggle.classList.toggle('primary', editMode);
+            editToggle.setAttribute('aria-pressed', String(editMode));
             for (const el of tablesEl.querySelectorAll('.marker')) {
                 el.dataset.edit = String(editMode);
                 el.style.cursor = editMode ? 'move' : 'pointer';
             }
+            showToast(editMode ? 'Editarea amplasării este activă.' : 'Editarea a fost dezactivată.');
         });
 
         exportLayout.addEventListener('click', () => {
             const data = layout.map(p => ({ id: p.id, left: roundPct(getPctLeft(p.id)), top: roundPct(getPctTop(p.id)) }));
-            navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2)).catch(() => { });
             localStorage.setItem('vanillaUnicornLayout', JSON.stringify(data));
-            showToast('Layout copiat în clipboard și salvat.');
+            showToast('Layout copiat în clipboard și salvat local.');
         });
 
         function roundPct(v) { return Math.max(0, Math.min(100, Math.round(v * 10) / 10)); }
@@ -722,30 +991,27 @@
         function getPctTop(id) { const el = tablesEl.querySelector(`.marker[data-id="${id}"]`); return (el.offsetTop + el.offsetHeight / 2) / tablesEl.clientHeight * 100; }
 
         tablesEl.addEventListener('pointerdown', (e) => {
-            if (!editMode) return; const t = e.target; if (!(t instanceof HTMLElement) || !t.classList.contains('marker')) return;
+            if (!editMode) return;
+            const t = e.target; if (!(t instanceof HTMLElement) || !t.classList.contains('marker')) return;
             dragEl = t; dragEl.setPointerCapture(e.pointerId);
         });
-
         tablesEl.addEventListener('pointermove', (e) => {
             if (!editMode || !dragEl) return;
             const rect = tablesEl.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width * 100;
-            const y = (e.clientY - rect.top) / rect.height * 100;
+            const x = (e.clientX - rect.left) / rect.width * 100, y = (e.clientY - rect.top) / rect.height * 100;
             dragEl.style.left = Math.max(0, Math.min(100, x)) + '%';
             dragEl.style.top = Math.max(0, Math.min(100, y)) + '%';
         });
-
-        const endDrag = () => { if (dragEl) { dragEl.releasePointerCapture; dragEl = null; } };
+        const endDrag = () => { if (dragEl) { dragEl.releasePointerCapture?.(0); dragEl = null; } };
         tablesEl.addEventListener('pointerup', endDrag);
         tablesEl.addEventListener('pointercancel', endDrag);
 
-        // Drag&drop imagine
+        // drag backdrop imagine
         const stage = document.getElementById('stage');
-        stage.addEventListener('dragover', e => { e.preventDefault(); });
+        stage.addEventListener('dragover', e => e.preventDefault());
         stage.addEventListener('drop', e => {
             e.preventDefault();
-            const f = e.dataTransfer?.files?.[0];
-            if (!f) return;
+            const f = e.dataTransfer?.files?.[0]; if (!f) return;
             const reader = new FileReader();
             reader.onload = ev => { backdrop.src = ev.target.result; };
             reader.readAsDataURL(f);
@@ -753,10 +1019,13 @@
 
         // ===================== UTILS =====================
         function toInputDate(d) { return d.toISOString().slice(0, 10); }
-        function toInputTime(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
-        function showToast(msg) { toast.textContent = msg; toast.style.display = 'block'; clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.style.display = 'none', 2500); }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg; toast.style.display = 'block';
+            clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.style.display = 'none', 2500);
+        }
 
-        // Initial status load
+        // kickoff
         refreshStatus();
     </script>
 </body>
