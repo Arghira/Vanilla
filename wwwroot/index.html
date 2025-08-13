@@ -14,7 +14,6 @@
             --accent: #8ef0cf;
             --accent-2: #50c8ff;
             --danger: #ff6b6b;
-            --warning: #ffd166;
             --gold: #d4af37;
             --shadow: 0 10px 30px rgba(0,0,0,.35);
         }
@@ -31,7 +30,7 @@
             margin: 0;
             color: var(--text);
             background: radial-gradient(80% 80% at 50% 0%, #151822, #0e1016);
-            font: 14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+            font: 14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif
         }
 
         header {
@@ -65,7 +64,7 @@
                 font-size: 24px;
                 font-weight: 700;
                 color: #000;
-                box-shadow: 0 0 0 2px #12141a inset;
+                box-shadow: 0 0 0 2px #12141a inset
             }
 
             .brand h1 {
@@ -75,7 +74,7 @@
                 background: linear-gradient(135deg,var(--gold),#fff);
                 -webkit-background-clip: text;
                 background-clip: text;
-                -webkit-text-fill-color: transparent;
+                -webkit-text-fill-color: transparent
             }
 
         .toolbar {
@@ -92,7 +91,7 @@
             border: 1px solid rgba(255,255,255,.12);
             background: var(--panel-2);
             color: var(--text);
-            transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+            transition: transform .06s ease, box-shadow .2s ease, background .2s ease
         }
 
             .btn:focus-visible {
@@ -103,12 +102,6 @@
 
             .btn:hover {
                 transform: translateY(-1px)
-            }
-
-            .btn.ghost {
-                background: transparent;
-                border-style: dashed;
-                border-color: rgba(255,255,255,.25)
             }
 
             .btn.primary {
@@ -149,7 +142,7 @@
             padding: 0 16px;
             display: grid;
             gap: 16px;
-            grid-template-columns: 340px 1fr;
+            grid-template-columns: 340px 1fr
         }
 
         @media (max-width:980px) {
@@ -245,11 +238,11 @@
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
+                object-position: center;
                 display: block;
-                opacity: 1;
                 user-select: none;
                 pointer-events: none;
-                background: #1a1a1a
+                background: #0f1115
             }
 
         .tables {
@@ -273,7 +266,7 @@
             user-select: none;
             border: 2px solid rgba(255,255,255,.25);
             filter: drop-shadow(0 3px 8px rgba(0,0,0,.7));
-            transition: transform .12s ease, filter .12s ease, opacity .2s ease, box-shadow .2s ease;
+            transition: transform .12s ease,filter .12s ease,opacity .2s ease,box-shadow .2s ease
         }
 
             .marker:focus-visible {
@@ -311,57 +304,6 @@
             color: #0b0f14;
             box-shadow: 0 0 15px rgba(255,107,107,.35)
         }
-
-        .marker[data-edit="true"] {
-            outline: 2px dashed rgba(255,255,255,.5);
-            outline-offset: 4px;
-            cursor: move
-        }
-
-        .tooltip {
-            position: relative
-        }
-
-            .tooltip::after {
-                content: attr(data-tip);
-                position: absolute;
-                left: 50%;
-                bottom: calc(100% + 10px);
-                transform: translateX(-50%);
-                white-space: nowrap;
-                pointer-events: none;
-                padding: 6px 8px;
-                border-radius: 8px;
-                font-size: 12px;
-                background: rgba(20,24,32,.95);
-                color: var(--text);
-                border: 1px solid rgba(255,255,255,.08);
-                opacity: 0;
-                translate: 0 4px;
-                transition: opacity .15s ease, translate .15s ease;
-            }
-
-            .tooltip:hover::after {
-                opacity: 1;
-                translate: 0 0
-            }
-
-            .tooltip::before {
-                content: "";
-                position: absolute;
-                left: 50%;
-                bottom: 100%;
-                transform: translate(-50%,6px);
-                border: 6px solid transparent;
-                border-top-color: rgba(20,24,32,.95);
-                opacity: 0;
-                transition: .15s ease;
-            }
-
-            .tooltip:hover::before {
-                opacity: 1;
-                transform: translate(-50%,0)
-            }
 
         .toast {
             position: fixed;
@@ -452,21 +394,7 @@
             font-size: 12px
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .marker, .btn {
-                transition: none
-            }
-
-                .marker:hover {
-                    transform: translate(-50%,-50%)
-                }
-
-                .marker.free {
-                    animation: none
-                }
-        }
-
-        /* ====== TIME PICKER (floating) ====== */
+        /* Time picker */
         .timepicker {
             position: relative
         }
@@ -482,7 +410,7 @@
                 border: 1px solid rgba(255,255,255,.08);
                 background: var(--panel-2);
                 color: var(--text);
-                cursor: pointer;
+                cursor: pointer
             }
 
             .timepicker .caret {
@@ -497,7 +425,7 @@
             position: fixed;
             z-index: 1000;
             left: 0;
-            top: 0; /* se setează din JS */
+            top: 0;
             width: 220px;
             max-height: 320px;
             display: none;
@@ -505,7 +433,7 @@
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 14px;
             box-shadow: var(--shadow);
-            padding: 8px;
+            padding: 8px
         }
 
             .timepanel.open {
@@ -518,7 +446,7 @@
                 grid-template-columns: repeat(2,1fr);
                 max-height: 260px;
                 overflow: auto;
-                padding: 4px;
+                padding: 4px
             }
 
         .timeopt {
@@ -530,7 +458,7 @@
             background: var(--panel-2);
             color: var(--text);
             font-weight: 600;
-            transition: background .15s ease, transform .06s ease;
+            transition: background .15s ease, transform .06s ease
         }
 
             .timeopt:hover {
@@ -556,7 +484,7 @@
             border-radius: 10px;
             border: 1px solid rgba(255,255,255,.10);
             background: var(--panel-2);
-            color: var(--text);
+            color: var(--text)
         }
 
         .kbd {
@@ -574,10 +502,7 @@
             <div class="logo">🦄</div>
             <h1>Vanilla Unicorn · Rezervări</h1>
         </div>
-        <div class="toolbar">
-            <button id="editToggle" class="btn ghost" aria-pressed="false">Editare amplasare mese</button>
-            <button id="exportLayout" class="btn ghost">Export layout</button>
-        </div>
+        <div class="toolbar"></div>
     </header>
 
     <main class="layout">
@@ -592,8 +517,6 @@
                         <label for="date">Data</label>
                         <input id="date" type="date" />
                     </div>
-
-                    <!-- TIME PICKER -->
                     <div style="width:170px">
                         <label for="time">Ora</label>
                         <div class="timepicker" id="timepicker">
@@ -601,7 +524,6 @@
                                 <span id="timeLabel">--:--</span>
                                 <span class="caret" aria-hidden="true"></span>
                             </button>
-                            <!-- panelul se mută în body; aici doar îl definim -->
                             <div class="timepanel" id="timePanel">
                                 <div class="header">
                                     <input class="search" id="timeSearch" placeholder="Caută (ex. 21:30)" aria-label="Caută ora" />
@@ -609,11 +531,9 @@
                                 </div>
                                 <div class="grid" id="timeGrid" role="listbox" aria-label="Alege ora"></div>
                             </div>
-                            <!-- valoarea reală -->
                             <input id="time" type="hidden" />
                         </div>
                     </div>
-
                     <div style="width:150px">
                         <label for="duration">Durata</label>
                         <select id="duration">
@@ -648,7 +568,6 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Modal Rezervare -->
     <dialog id="modal">
         <form method="dialog" id="reservationForm">
             <div class="modal-h">
@@ -658,18 +577,9 @@
             <div class="modal-c">
                 <div style="margin-bottom:10px" class="subtext">Interval: <span id="mWhen"></span></div>
                 <div class="grid">
-                    <div>
-                        <label for="mName">Nume</label>
-                        <input id="mName" required placeholder="Nume și prenume" />
-                    </div>
-                    <div>
-                        <label for="mPhone">Telefon</label>
-                        <input id="mPhone" placeholder="07xx xxx xxx" />
-                    </div>
-                    <div>
-                        <label for="mParty">Numărul persoanelor</label>
-                        <input id="mParty" type="number" min="1" max="20" value="2" />
-                    </div>
+                    <div><label for="mName">Nume</label><input id="mName" required placeholder="Nume și prenume" /></div>
+                    <div><label for="mPhone">Telefon</label><input id="mPhone" placeholder="07xx xxx xxx" /></div>
+                    <div><label for="mParty">Numărul persoanelor</label><input id="mParty" type="number" min="1" max="20" value="2" /></div>
                     <div>
                         <label for="mDuration">Durata</label>
                         <select id="mDuration">
@@ -692,68 +602,48 @@
     </dialog>
 
     <script>
-        // ===================== CONFIG BACKDROP =====================
-        const API_BASE = window.location.origin;
+        /* ===================== STATIC FLOORPLAN ===================== */
+        const BACKGROUND_SRC = './plan4.png'; // put your PNG/JPEG in wwwroot and keep this path
 
-        let layout = JSON.parse(localStorage.getItem('vanillaUnicornLayout') || 'null') || [
-            { id: 1, left: 58.5, top: 23 },
-            { id: 2, left: 44, top: 34 },
-            { id: 3, left: 69, top: 28 },
-            { id: 4, left: 65, top: 39 },
-            { id: 5, left: 83, top: 39 },
-            { id: 6, left: 35, top: 48 },
-            { id: 7, left: 65, top: 48 },
-            { id: 8, left: 83, top: 48 },
-            { id: 9, left: 45, top: 66 },
-            { id: 10, left: 67, top: 66 },
-            { id: 11, left: 20, top: 69 }
-        ];
+        // Fixed coordinates (percent of stage). Adjust if needed for your image.
+        const LAYOUT_STATIC = Object.freeze([
+            { id: 1, left: 48.0, top: 27.3 },
+            { id: 2, left: 50.5, top: 40.0 },
+            { id: 3, left: 58.5, top: 34.0 },
+            { id: 4, left: 62.5, top: 45.0 },
+            { id: 5, left: 70.0, top: 45.0 },
+            { id: 6, left: 47.0, top: 54.0 },
+            { id: 7, left: 62.5, top: 55.0 },
+            { id: 8, left: 70.0, top: 55.0 },
+            { id: 9, left: 48.0, top: 73.0 },
+            { id: 10, left: 57.2, top: 73.0 },
+            { id: 11, left: 27.5, top: 80.0 }
+        ]);
+        // Use the static layout; do not read or write localStorage
+        const layout = LAYOUT_STATIC;
 
         const backdrop = document.getElementById('backdrop');
-        function createPlan() {
-            const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 650;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#2d2d2d'; ctx.fillRect(0, 0, 1000, 650);
-            ctx.fillStyle = '#3a3a3a'; ctx.beginPath();
-            ctx.moveTo(50, 150); ctx.lineTo(400, 150); ctx.lineTo(400, 50); ctx.lineTo(600, 50);
-            ctx.lineTo(600, 150); ctx.lineTo(850, 150); ctx.lineTo(850, 300); ctx.lineTo(950, 300);
-            ctx.lineTo(950, 550); ctx.lineTo(750, 550); ctx.lineTo(750, 500); ctx.lineTo(250, 500);
-            ctx.lineTo(250, 600); ctx.lineTo(50, 600); ctx.closePath(); ctx.fill();
-            ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3;
-            ctx.beginPath(); ctx.moveTo(400, 150); ctx.lineTo(400, 350);
-            ctx.moveTo(600, 150); ctx.lineTo(600, 350);
-            ctx.moveTo(250, 350); ctx.lineTo(750, 350);
-            ctx.moveTo(250, 450); ctx.lineTo(650, 450); ctx.stroke();
-            ctx.fillStyle = '#4a4a5a'; ctx.fillRect(450, 80, 100, 60);
-            ctx.strokeStyle = '#6a6a7a'; ctx.strokeRect(450, 80, 100, 60);
-            ctx.fillStyle = '#5a4a4a'; ctx.fillRect(780, 200, 60, 100);
-            ctx.strokeStyle = '#7a6a6a'; ctx.strokeRect(780, 200, 60, 100);
-            ctx.fillStyle = '#4a5a4a';
-            for (let i = 0; i < 3; i++) { ctx.fillRect(300 + i * 120, 470, 80, 80); ctx.strokeStyle = '#6a7a6a'; ctx.strokeRect(300 + i * 120, 470, 80, 80); }
-            ctx.fillStyle = '#555';
-            for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(200 + i * 80, 250, 8, 0, Math.PI * 2); ctx.fill(); }
-            ctx.fillStyle = '#444'; ctx.fillRect(300, 200, 15, 15); ctx.fillRect(500, 200, 15, 15); ctx.fillRect(700, 200, 15, 15);
-            return canvas.toDataURL();
-        }
-        backdrop.src = createPlan();
+        backdrop.src = BACKGROUND_SRC;
+        backdrop.addEventListener('error', () => {
+            console.warn('Floorplan image not found at', BACKGROUND_SRC);
+        });
 
-        // ===================== TIME PICKER (floating portal) =====================
-        const picker = document.getElementById('timepicker');
+        /* ===================== CONFIG ===================== */
+        const API_BASE = window.location.origin;
+
+        /* ===================== TIME PICKER ===================== */
         const timeBtn = document.getElementById('timeBtn');
         const timeLabel = document.getElementById('timeLabel');
         const timeInput = document.getElementById('time'); // hidden HH:mm
         const timePanel = document.getElementById('timePanel');
         const timeGrid = document.getElementById('timeGrid');
         const timeSearch = document.getElementById('timeSearch');
-
-        // Mutăm panelul în body ca să nu fie tăiat de containere
         document.body.appendChild(timePanel);
 
-        // liste pe 30 min, 12:00 -> 04:00
         const timeOptions = (() => {
             const opts = [];
-            let d = new Date(); d.setHours(12, 0, 0, 0);
-            const end = new Date(d); end.setHours(28, 0, 0, 0); // 04:00 next day
+            let d = new Date(); d.setHours(12, 0, 0, 0);             // 12:00
+            const end = new Date(d); end.setHours(28, 0, 0, 0);      // 04:00 next day
             while (d <= end) { opts.push(d.toTimeString().slice(0, 5)); d = new Date(d.getTime() + 30 * 60000); }
             return opts;
         })();
@@ -770,75 +660,31 @@
                 b.addEventListener('mouseenter', () => b.focus({ preventScroll: true }));
                 timeGrid.appendChild(b);
             }
-            // auto-scroll la selecția curentă
-            setTimeout(() => {
-                const sel = timeGrid.querySelector('.timeopt[aria-selected="true"]');
-                sel?.scrollIntoView({ block: 'nearest' });
-            }, 0);
+            setTimeout(() => timeGrid.querySelector('.timeopt[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }), 0);
         }
-
         function placePanel() {
-            const r = timeBtn.getBoundingClientRect();
-            const margin = 6;
-            const width = Math.max(220, r.width); // cel puțin 220px
+            const r = timeBtn.getBoundingClientRect(), margin = 6;
+            const width = Math.max(220, r.width);
             timePanel.style.width = width + 'px';
             timePanel.style.left = Math.min(r.left, window.innerWidth - width - 8) + 'px';
-            // mai întâi punem sub buton…
             timePanel.style.top = (r.bottom + margin) + 'px';
             timePanel.classList.add('open');
-            // …apoi dacă iese din ecran, îl ridicăm deasupra
             const pr = timePanel.getBoundingClientRect();
-            if (pr.bottom > window.innerHeight) {
-                timePanel.style.top = (r.top - pr.height - margin) + 'px';
-            }
+            if (pr.bottom > window.innerHeight) timePanel.style.top = (r.top - pr.height - margin) + 'px';
         }
-
-        function openTimePanel() {
-            renderTimeOptions();
-            placePanel();
-            timeBtn.setAttribute('aria-expanded', 'true');
-            timeSearch.value = ""; setTimeout(() => timeSearch.focus(), 10);
-            window.addEventListener('scroll', closeTimePanel, { once: true });
-            window.addEventListener('resize', closeTimePanel, { once: true });
-            document.addEventListener('mousedown', onClickOutside);
-            document.addEventListener('keydown', onTimeKey);
-        }
-        function closeTimePanel() {
-            timePanel.classList.remove('open');
-            timeBtn.setAttribute('aria-expanded', 'false');
-            document.removeEventListener('mousedown', onClickOutside);
-            document.removeEventListener('keydown', onTimeKey);
-        }
-        function onClickOutside(e) {
-            if (!timePanel.contains(e.target) && e.target !== timeBtn) closeTimePanel();
-        }
+        function openTimePanel() { renderTimeOptions(); placePanel(); timeBtn.setAttribute('aria-expanded', 'true'); timeSearch.value = ""; setTimeout(() => timeSearch.focus(), 10); window.addEventListener('scroll', closeTimePanel, { once: true }); window.addEventListener('resize', closeTimePanel, { once: true }); document.addEventListener('mousedown', onClickOutside); document.addEventListener('keydown', onTimeKey); }
+        function closeTimePanel() { timePanel.classList.remove('open'); timeBtn.setAttribute('aria-expanded', 'false'); document.removeEventListener('mousedown', onClickOutside); document.removeEventListener('keydown', onTimeKey); }
+        function onClickOutside(e) { if (!timePanel.contains(e.target) && e.target !== timeBtn) closeTimePanel(); }
         function onTimeKey(e) {
             if (e.key === 'Escape') { closeTimePanel(); timeBtn.focus(); }
-            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                const focusable = [...timeGrid.querySelectorAll('.timeopt')];
-                if (!focusable.length) return;
-                const idx = focusable.findIndex(x => x === document.activeElement);
-                const next = e.key === 'ArrowDown' ? Math.min(idx + 1, focusable.length - 1)
-                    : Math.max(idx - 1, 0);
-                (focusable[next] || focusable[0]).focus();
-            }
-            if (e.key === 'Enter' && document.activeElement?.classList.contains('timeopt')) {
-                document.activeElement.click();
-            }
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); const a = [...timeGrid.querySelectorAll('.timeopt')]; if (!a.length) return; const i = a.findIndex(x => x === document.activeElement); const n = e.key === 'ArrowDown' ? Math.min(i + 1, a.length - 1) : Math.max(i - 1, 0); (a[n] || a[0]).focus(); }
+            if (e.key === 'Enter' && document.activeElement?.classList.contains('timeopt')) document.activeElement.click();
         }
-        function selectTime(t, announce) {
-            timeInput.value = t;
-            timeLabel.textContent = t;
-            closeTimePanel();
-            if (announce) { refreshStatus(); }
-        }
-        timeBtn.addEventListener('click', () => {
-            if (timePanel.classList.contains('open')) closeTimePanel(); else openTimePanel();
-        });
+        function selectTime(t, announce) { timeInput.value = t; timeLabel.textContent = t; closeTimePanel(); if (announce) { refreshStatus(); } }
+        timeBtn.addEventListener('click', () => timePanel.classList.contains('open') ? closeTimePanel() : openTimePanel());
         timeSearch.addEventListener('input', (e) => renderTimeOptions(e.target.value));
 
-        // ===================== ELEMENTS & DEFAULTS =====================
+        /* ===================== ELEMENTS & DEFAULTS ===================== */
         const elDate = document.getElementById('date');
         const elDur = document.getElementById('duration');
         const btnCheck = document.getElementById('check');
@@ -846,27 +692,19 @@
         const toast = document.getElementById('toast');
         const availabilityMeta = document.getElementById('availabilityMeta');
 
-        // default (rotunjit la 30min)
-        const dNow = new Date(); dNow.setMinutes(dNow.getMinutes() < 30 ? 30 : 60, 0, 0);
-        elDate.value = toInputDate(dNow);
-        const startDefault = nearestExisting(dNow);
-        timeInput.value = startDefault; timeLabel.textContent = startDefault;
+        const now = new Date(); now.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
+        elDate.value = toInputDate(now);
+        const startDefault = (() => { const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; return timeOptions.includes(hhmm) ? hhmm : timeOptions[0]; })();
+        selectTime(startDefault, false);
 
         btnCheck.addEventListener('click', refreshStatus);
         elDate.addEventListener('change', refreshStatus);
-
-        function nearestExisting(d) {
-            const hhmm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            if (timeOptions.includes(hhmm)) return hhmm;
-            return timeOptions[0];
-        }
 
         function buildMarkers() {
             tablesEl.innerHTML = '';
             for (const pos of layout) {
                 const m = document.createElement('button');
-                m.className = 'marker tooltip';
-                m.dataset.id = String(pos.id);
+                m.className = 'marker'; m.dataset.id = String(pos.id);
                 m.style.left = pos.left + '%'; m.style.top = pos.top + '%';
                 m.setAttribute('aria-label', `Masa ${pos.id}`); m.setAttribute('tabindex', '0');
                 m.textContent = String(pos.id);
@@ -877,7 +715,7 @@
         }
         buildMarkers();
 
-        // ===================== STATUS & REZERVARE =====================
+        /* ===================== STATUS & REZERVARE ===================== */
         async function refreshStatus() {
             const { iso, human } = currentSlotIso();
             btnCheck.setAttribute('aria-busy', 'true');
@@ -885,7 +723,7 @@
             try {
                 const r = await fetch(`${API_BASE}/status?startAt=${encodeURIComponent(iso)}`);
                 if (!r.ok) throw new Error('Eroare la citirea statusului.');
-                const data = await r.json(); // [{tableId, isReserved}]
+                const data = await r.json();
                 const map = new Map(data.map(x => [x.tableId, x.isReserved]));
                 let freeCount = 0;
                 for (const el of tablesEl.querySelectorAll('.marker')) {
@@ -895,7 +733,6 @@
                     el.classList.toggle('free', !busy);
                     if (!busy) freeCount++;
                     el.title = `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} — ${human}`;
-                    el.setAttribute('data-tip', `Masa ${id} · ${busy ? 'Rezervată' : 'Liberă'} · ${human}`);
                 }
                 availabilityMeta.textContent = `${freeCount} ${freeCount === 1 ? 'masă liberă' : 'mese libere'} la ${human}`;
                 showToast('Disponibilitatea a fost actualizată.');
@@ -915,6 +752,7 @@
             return { iso, human, local };
         }
 
+        /* ===== Modal ===== */
         const modal = document.getElementById('modal');
         const mTable = document.getElementById('mTable');
         const mWhen = document.getElementById('mWhen');
@@ -929,7 +767,7 @@
 
         function onMarkerClick(id) {
             const el = tablesEl.querySelector(`.marker[data-id="${id}"]`);
-            if (el.classList.contains('busy')) { return; }
+            if (el.classList.contains('busy')) return;
             const { iso, human } = currentSlotIso();
             mTable.textContent = id; mWhen.textContent = human; mDuration.value = Number(document.getElementById('duration').value);
             mName.value = ''; mPhone.value = ''; mParty.value = '2'; mNote.value = '';
@@ -963,69 +801,14 @@
             saveBtn.addEventListener('click', onSave);
         }
 
-        // ===================== EDIT MODE =====================
-        const editToggle = document.getElementById('editToggle');
-        const exportLayout = document.getElementById('exportLayout');
-        let editMode = false, dragEl = null;
-
-        editToggle.addEventListener('click', () => {
-            editMode = !editMode;
-            editToggle.classList.toggle('primary', editMode);
-            editToggle.setAttribute('aria-pressed', String(editMode));
-            for (const el of tablesEl.querySelectorAll('.marker')) {
-                el.dataset.edit = String(editMode);
-                el.style.cursor = editMode ? 'move' : 'pointer';
-            }
-            showToast(editMode ? 'Editarea amplasării este activă.' : 'Editarea a fost dezactivată.');
-        });
-
-        exportLayout.addEventListener('click', () => {
-            const data = layout.map(p => ({ id: p.id, left: roundPct(getPctLeft(p.id)), top: roundPct(getPctTop(p.id)) }));
-            navigator.clipboard.writeText(JSON.stringify(data, null, 2)).catch(() => { });
-            localStorage.setItem('vanillaUnicornLayout', JSON.stringify(data));
-            showToast('Layout copiat în clipboard și salvat local.');
-        });
-
-        function roundPct(v) { return Math.max(0, Math.min(100, Math.round(v * 10) / 10)); }
-        function getPctLeft(id) { const el = tablesEl.querySelector(`.marker[data-id="${id}"]`); return (el.offsetLeft + el.offsetWidth / 2) / tablesEl.clientWidth * 100; }
-        function getPctTop(id) { const el = tablesEl.querySelector(`.marker[data-id="${id}"]`); return (el.offsetTop + el.offsetHeight / 2) / tablesEl.clientHeight * 100; }
-
-        tablesEl.addEventListener('pointerdown', (e) => {
-            if (!editMode) return;
-            const t = e.target; if (!(t instanceof HTMLElement) || !t.classList.contains('marker')) return;
-            dragEl = t; dragEl.setPointerCapture(e.pointerId);
-        });
-        tablesEl.addEventListener('pointermove', (e) => {
-            if (!editMode || !dragEl) return;
-            const rect = tablesEl.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width * 100, y = (e.clientY - rect.top) / rect.height * 100;
-            dragEl.style.left = Math.max(0, Math.min(100, x)) + '%';
-            dragEl.style.top = Math.max(0, Math.min(100, y)) + '%';
-        });
-        const endDrag = () => { if (dragEl) { dragEl.releasePointerCapture?.(0); dragEl = null; } };
-        tablesEl.addEventListener('pointerup', endDrag);
-        tablesEl.addEventListener('pointercancel', endDrag);
-
-        // drag backdrop imagine
-        const stage = document.getElementById('stage');
-        stage.addEventListener('dragover', e => e.preventDefault());
-        stage.addEventListener('drop', e => {
-            e.preventDefault();
-            const f = e.dataTransfer?.files?.[0]; if (!f) return;
-            const reader = new FileReader();
-            reader.onload = ev => { backdrop.src = ev.target.result; };
-            reader.readAsDataURL(f);
-        });
-
-        // ===================== UTILS =====================
+        /* ===================== UTILS ===================== */
         function toInputDate(d) { return d.toISOString().slice(0, 10); }
         function showToast(msg) {
-            const toast = document.getElementById('toast');
             toast.textContent = msg; toast.style.display = 'block';
             clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.style.display = 'none', 2500);
         }
 
-        // kickoff
+        /* kickoff */
         refreshStatus();
     </script>
 </body>
