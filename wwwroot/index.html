@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Vanilla · Acasă</title>
     <style>
+        /* HERO HEADER – mare, simplu, doar text (landing) */
+        header.hero {
+            display: block;
+            padding: 32px 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(6px);
+        }
+
+        .hero-title {
+            margin: 0;
+            font-weight: 900;
+            font-size: clamp(28px, 4vw, 44px);
+            letter-spacing: .5px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #d4af37, #ffb6ff 60%, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         :root {
             --panel: #171a21;
             --panel2: #1d2230;
@@ -109,9 +133,8 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">🦄</div>
-        <h1>Vanilla · Bine ai venit</h1>
+    <header class="hero">
+        <h1 class="hero-title">Road Saints Family</h1>
     </header>
 
     <main class="wrap">
