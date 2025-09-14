@@ -12,7 +12,7 @@ using Vanilla.Data;
 namespace Vanilla.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250914154010_InitialCreate")]
+    [Migration("20250914155242_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
