@@ -9,10 +9,10 @@ using Vanilla.Data;
 
 #nullable disable
 
-namespace Vanilla.Data.Migrations
+namespace Vanilla.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250813122159_InitialCreate")]
+    [Migration("20250914154010_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
